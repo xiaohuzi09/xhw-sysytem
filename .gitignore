@@ -1,4 +1,6 @@
-# OS generated files
+# ============================================
+# OS Generated Files
+# ============================================
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -7,8 +9,12 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
 
-# IDE and editors
+# ============================================
+# IDE & Editors
+# ============================================
 .idea/
 .vscode/*
 !.vscode/extensions.json
@@ -16,44 +22,128 @@ Thumbs.db
 *.swp
 *.swo
 *~
+*.sublime-*
 
+# AI/Editor tools
+.codex/
+.cursor/
+.qoder/
+.task/
+
+# ============================================
 # Go
+# ============================================
+# Binaries
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
+
+# Test & coverage
 *.test
 *.out
 *.prof
 *.pprof
 coverage.*
 coverage.html
+
+# Dependencies & workspace
 /vendor/
 go.work
 go.work.sum
+
+# Go build cache
 .cache/
 
-# Build output
-/bin/
-/dist/
-/build/
-/tmp/
-tmp/
-temp/
+# ============================================
+# Node.js / Frontend
+# ============================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.eslintcache
 
-# Environment files
+# Vite / Build output
+**/dist/
+
+# TypeScript
+*.tsbuildinfo
+
+# ============================================
+# Wails (app/)
+# ============================================
+# Build outputs
+app/bin/
+app/build/bin/
+app/build/darwin/
+app/build/windows/
+app/build/linux/
+app/build/android/
+app/build/ios/
+
+# Wails generated bindings (optional, usually generated at build time)
+# Uncomment if bindings are auto-generated and shouldn't be committed
+# app/frontend/bindings/
+
+# ============================================
+# Backend (backend/)
+# ============================================
+# Compiled binary
+backend/xhw-service
+backend/xhw-service.exe
+
+# Log files
+*.log
+backend/logs/
+
+# Air hot reload temp
+tmp/
+
+# ============================================
+# Environment & Config (Sensitive)
+# ============================================
 .env
 .env.*
 !.env.example
-*.local.yaml
 
-# Logs
-*.log
-logs/
+# Backend config files with real credentials
+# NOTE: These contain secrets. If you need to track example configs,
+# commit *.example.yaml instead and keep real configs local.
+backend/config/config.yaml
+backend/config/config.prod.yaml
+backend/config/*.local.yaml
 
-# Node (if any frontend)
-node_modules/
+# App env files
+app/frontend/.env.development
+app/frontend/.env.production
+app/frontend/.env.local
 
-# Air (hot reload)
+# ============================================
+# General Build Output
+# ============================================
+/bin/
+/build/
+/dist/
+/tmp/
 tmp/
+temp/
+*.tmp
+*.temp
+*.pid
+*.seed
+*.pid.lock
+
+# ============================================
+# Docker
+# ============================================
+*.env.docker
+
+# ============================================
+# Misc
+# ============================================
+*.bak
+*.orig
+*.rej

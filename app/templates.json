@@ -1,0 +1,54 @@
+[
+  {
+    "id": "1772776319886465000",
+    "name": "2342",
+    "width": 200,
+    "height": 200,
+    "scale": 1,
+    "imagePath": "/Users/huhai/Desktop/ken/证件/QQ20220521-0.jpg",
+    "offsetTop": 0,
+    "offsetRight": 0,
+    "offsetBottom": 0,
+    "offsetLeft": 20,
+    "createdAt": "2026-03-06T13:51:59.886467+08:00"
+  },
+  {
+    "id": "1774190090069329000",
+    "name": "1",
+    "width": 1206,
+    "height": 2622,
+    "scale": 1,
+    "imagePath": "https://xhw-rustfs.zeabur.app/xhw/templates/1_1774190087409.png",
+    "offsetTop": 0,
+    "offsetRight": 0,
+    "offsetBottom": 0,
+    "offsetLeft": 0,
+    "createdAt": "2026-03-22T22:34:50.069331+08:00"
+  },
+  {
+    "id": "1774196726376675000",
+    "name": "3",
+    "width": 400,
+    "height": 400,
+    "scale": 1,
+    "imagePath": "",
+    "offsetTop": 0,
+    "offsetRight": 0,
+    "offsetBottom": 0,
+    "offsetLeft": 0,
+    "createdAt": "2026-03-23T00:25:26.376678+08:00"
+  },
+  {
+    "id": "1774197251831854000",
+    "name": "3",
+    "width": 400,
+    "height": 800,
+    "scale": 1,
+    "imagePath": "",
+    "offsetTop": 0,
+    "offsetRight": 0,
+    "offsetBottom": 0,
+    "offsetLeft": 0,
+    "createdAt": "2026-03-23T00:34:11.831856+08:00"
+  }
+]
