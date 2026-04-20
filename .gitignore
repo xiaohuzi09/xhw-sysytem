@@ -1,5 +1,59 @@
+# OS generated files
 .DS_Store
-node_modules/
-dist/
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE and editors
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+*.swo
+*~
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*.prof
+*.pprof
+coverage.*
+coverage.html
+/vendor/
+go.work
+go.work.sum
+.cache/
+
+# Build output
+/bin/
+/dist/
+/build/
+/tmp/
+tmp/
+temp/
+
+# Environment files
 .env
+.env.*
+!.env.example
+*.local.yaml
+
+# Logs
 *.log
+logs/
+
+# Node (if any frontend)
+node_modules/
+
+# Air (hot reload)
+tmp/

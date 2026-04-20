@@ -1,0 +1,1115 @@
+basePath: /
+definitions:
+  controllers.GenerateProductTitleRequest:
+    properties:
+      custom_prompt:
+        type: string
+      image_base64:
+        type: string
+      image_type:
+        type: string
+      image_url:
+        type: string
+    type: object
+  controllers.GenerateProductTitleResponse:
+    properties:
+      title_cn:
+        type: string
+      title_en:
+        type: string
+    type: object
+  controllers.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  controllers.LoginResponse:
+    properties:
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/models.User'
+    type: object
+  controllers.MaterialCreateRequest:
+    properties:
+      title_cn:
+        type: string
+      title_en:
+        type: string
+      url:
+        type: string
+      user_id:
+        type: integer
+    required:
+    - url
+    type: object
+  controllers.MaterialPageResult:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/models.Material'
+        type: array
+      page:
+        type: integer
+      page_size:
+        type: integer
+      total:
+        type: integer
+    type: object
+  controllers.MaterialUpdateRequest:
+    properties:
+      title_cn:
+        type: string
+      title_en:
+        type: string
+      url:
+        type: string
+    type: object
+  controllers.PresignDownloadRequest:
+    properties:
+      bucket:
+        type: string
+      expire:
+        description: 过期时间（秒），默认3600
+        type: integer
+      key:
+        type: string
+    required:
+    - bucket
+    - key
+    type: object
+  controllers.PresignDownloadResponse:
+    properties:
+      expires_in:
+        type: integer
+      url:
+        type: string
+    type: object
+  controllers.PresignUploadRequest:
+    properties:
+      bucket:
+        type: string
+      expire:
+        description: 过期时间（秒），默认3600
+        type: integer
+      key:
+        type: string
+    required:
+    - bucket
+    - key
+    type: object
+  controllers.PresignUploadResponse:
+    properties:
+      expires_in:
+        type: integer
+      url:
+        type: string
+    type: object
+  controllers.RegisterRequest:
+    properties:
+      email:
+        type: string
+      nickname:
+        type: string
+      password:
+        minLength: 6
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  controllers.RustFSBucketInfo:
+    properties:
+      CreationDate:
+        type: string
+      Name:
+        type: string
+    type: object
+  controllers.RustFSObjectInfo:
+    properties:
+      ETag:
+        type: string
+      Key:
+        type: string
+      LastModified:
+        type: string
+      Size:
+        type: integer
+      StorageClass:
+        type: string
+    type: object
+  controllers.TemplateCreateRequest:
+    properties:
+      height:
+        type: integer
+      name:
+        type: string
+      offset_x:
+        type: number
+      offset_y:
+        type: number
+      scale:
+        type: number
+      url:
+        type: string
+      user_id:
+        type: integer
+      width:
+        type: integer
+    required:
+    - name
+    - url
+    type: object
+  controllers.TemplateUpdateRequest:
+    properties:
+      height:
+        type: integer
+      name:
+        type: string
+      offset_x:
+        type: number
+      offset_y:
+        type: number
+      scale:
+        type: number
+      url:
+        type: string
+      width:
+        type: integer
+    type: object
+  controllers.UserCreateRequest:
+    properties:
+      avatar:
+        type: string
+      email:
+        type: string
+      nickname:
+        type: string
+      password:
+        minLength: 6
+        type: string
+      status:
+        type: integer
+      username:
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  controllers.UserUpdateRequest:
+    properties:
+      avatar:
+        type: string
+      email:
+        type: string
+      nickname:
+        type: string
+      password:
+        type: string
+      status:
+        type: integer
+      username:
+        type: string
+    type: object
+  models.Material:
+    properties:
+      code:
+        description: 素材编号
+        type: integer
+      created_at:
+        type: string
+      id:
+        type: integer
+      title_cn:
+        description: 中文标题
+        type: string
+      title_en:
+        description: 英文标题
+        type: string
+      updated_at:
+        type: string
+      url:
+        description: 素材URL
+        type: string
+      user_id:
+        description: 用户ID
+        type: integer
+    type: object
+  models.Template:
+    properties:
+      created_at:
+        type: string
+      height:
+        description: 素材高度
+        type: integer
+      id:
+        type: integer
+      name:
+        description: 模版名称
+        type: string
+      offset_x:
+        description: X轴偏移
+        type: number
+      offset_y:
+        description: Y轴偏移
+        type: number
+      scale:
+        description: 缩放比例
+        type: number
+      updated_at:
+        type: string
+      url:
+        description: 模版URL
+        type: string
+      user_id:
+        description: 用户ID
+        type: integer
+      width:
+        description: 素材宽度
+        type: integer
+    type: object
+  models.User:
+    properties:
+      avatar:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      nickname:
+        type: string
+      role:
+        description: 'admin: 管理员, user: 普通用户'
+        type: string
+      status:
+        description: '1: 正常, 0: 禁用'
+        type: integer
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+  utils.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: xhw-service 后台接口文档，业务接口统一返回 utils.Response，鉴权接口请先登录后在 Swagger Authorize
+    中填写 Bearer Token。
+  title: xhw-service API
+  version: "1.0"
+paths:
+  /api/v1/ark/product-title:
+    post:
+      consumes:
+      - application/json
+      description: 使用火山引擎视觉模型识别图片内容，生成中英文商品标题。支持图片URL或Base64编码图片
+      parameters:
+      - description: 请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.GenerateProductTitleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/controllers.GenerateProductTitleResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 图片识别生成商品标题
+      tags:
+      - ARK
+  /api/v1/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: 使用用户名和密码登录，成功后返回用户信息和 JWT Token。
+      parameters:
+      - description: 登录参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/controllers.LoginResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+      summary: 用户登录
+      tags:
+      - 认证
+  /api/v1/auth/register:
+    post:
+      consumes:
+      - application/json
+      description: 注册新用户账号，用户名命中管理员白名单时会自动赋予管理员角色。
+      parameters:
+      - description: 注册参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.User'
+              type: object
+      summary: 用户注册
+      tags:
+      - 认证
+  /api/v1/materials:
+    get:
+      description: 分页查询素材列表，管理员可按 user_id 筛选任意用户素材，普通用户仅能查询自己的素材。
+      parameters:
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页数量，最大100
+        in: query
+        name: page_size
+        type: integer
+      - description: 用户ID，管理员可选
+        in: query
+        name: user_id
+        type: integer
+      - description: 素材编号
+        in: query
+        name: code
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/controllers.MaterialPageResult'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取素材列表
+      tags:
+      - 素材管理
+    post:
+      consumes:
+      - application/json
+      description: 创建素材并自动生成当前归属用户下递增的素材编号；普通用户提交的 user_id 会被覆盖为当前登录用户。
+      parameters:
+      - description: 素材信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.MaterialCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Material'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 创建素材
+      tags:
+      - 素材管理
+  /api/v1/materials/{id}:
+    delete:
+      description: 删除素材，普通用户只能删除自己的素材。
+      parameters:
+      - description: 素材ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 删除素材
+      tags:
+      - 素材管理
+    get:
+      description: 管理员可查看任意素材，普通用户只能查看自己的素材。
+      parameters:
+      - description: 素材ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Material'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取素材详情
+      tags:
+      - 素材管理
+    put:
+      consumes:
+      - application/json
+      description: 更新素材信息，普通用户只能更新自己的素材，code 和 user_id 不允许修改。
+      parameters:
+      - description: 素材ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 素材更新内容
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.MaterialUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Material'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 更新素材
+      tags:
+      - 素材管理
+  /api/v1/rustfs/buckets:
+    get:
+      description: 获取 RustFS 中的全部存储桶。
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/controllers.RustFSBucketInfo'
+                  type: array
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取存储桶列表
+      tags:
+      - 对象存储
+  /api/v1/rustfs/buckets/{bucket}:
+    post:
+      description: 创建指定名称的存储桶。
+      parameters:
+      - description: 存储桶名称
+        in: path
+        name: bucket
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 创建存储桶
+      tags:
+      - 对象存储
+  /api/v1/rustfs/buckets/{bucket}/objects:
+    get:
+      description: 获取指定存储桶下的对象列表。
+      parameters:
+      - description: 存储桶名称
+        in: path
+        name: bucket
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/controllers.RustFSObjectInfo'
+                  type: array
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取对象列表
+      tags:
+      - 对象存储
+  /api/v1/rustfs/buckets/{bucket}/objects/{key}:
+    delete:
+      description: 删除指定存储桶下的对象，key 支持携带多级路径。
+      parameters:
+      - description: 存储桶名称
+        in: path
+        name: bucket
+        required: true
+        type: string
+      - description: 对象 Key
+        in: path
+        name: key
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 删除对象
+      tags:
+      - 对象存储
+  /api/v1/rustfs/presign/download:
+    post:
+      consumes:
+      - application/json
+      description: 为指定 bucket/key 生成 GET 下载预签名 URL，expire 为过期秒数，默认 3600。
+      parameters:
+      - description: 下载预签名参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.PresignDownloadRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/controllers.PresignDownloadResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取下载预签名 URL
+      tags:
+      - 对象存储
+  /api/v1/rustfs/presign/upload:
+    post:
+      consumes:
+      - application/json
+      description: 为指定 bucket/key 生成 PUT 上传预签名 URL，expire 为过期秒数，默认 3600。
+      parameters:
+      - description: 上传预签名参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.PresignUploadRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/controllers.PresignUploadResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取上传预签名 URL
+      tags:
+      - 对象存储
+  /api/v1/templates:
+    get:
+      description: 管理员可按 user_id 查询任意用户模版，普通用户仅能查询自己的模版。
+      parameters:
+      - description: 用户ID，管理员可选
+        in: query
+        name: user_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.Template'
+                  type: array
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取模版列表
+      tags:
+      - 模版管理
+    post:
+      consumes:
+      - application/json
+      description: 创建模版；普通用户提交的 user_id 会被强制覆盖为当前登录用户，管理员可指定 user_id。
+      parameters:
+      - description: 模版信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.TemplateCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Template'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 创建模版
+      tags:
+      - 模版管理
+  /api/v1/templates/{id}:
+    delete:
+      description: 删除模版，普通用户只能删除自己的模版。
+      parameters:
+      - description: 模版ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 删除模版
+      tags:
+      - 模版管理
+    get:
+      description: 管理员可查看任意模版，普通用户只能查看自己的模版。
+      parameters:
+      - description: 模版ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Template'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取模版详情
+      tags:
+      - 模版管理
+    put:
+      consumes:
+      - application/json
+      description: 更新模版信息，普通用户只能更新自己的模版，user_id 不允许修改。
+      parameters:
+      - description: 模版ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 模版更新内容
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.TemplateUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Template'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 更新模版
+      tags:
+      - 模版管理
+  /api/v1/users:
+    get:
+      description: 仅管理员可获取全部用户列表。
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.User'
+                  type: array
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取用户列表
+      tags:
+      - 用户管理
+    post:
+      consumes:
+      - application/json
+      description: 仅管理员可创建用户，角色会根据管理员白名单自动判定。
+      parameters:
+      - description: 用户信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.UserCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.User'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 创建用户
+      tags:
+      - 用户管理
+  /api/v1/users/{id}:
+    delete:
+      description: 仅管理员可删除用户。
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 删除用户
+      tags:
+      - 用户管理
+    get:
+      description: 管理员可查看任意用户，普通用户只能查看自己的账号信息。
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.User'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取用户详情
+      tags:
+      - 用户管理
+    put:
+      consumes:
+      - application/json
+      description: 管理员可更新任意用户，普通用户只能更新自己的账号信息；role 字段由系统根据用户名自动计算。
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 用户更新内容
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.UserUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.User'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: 更新用户
+      tags:
+      - 用户管理
+securityDefinitions:
+  BearerAuth:
+    description: JWT Authorization header，格式为 Bearer {token}
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

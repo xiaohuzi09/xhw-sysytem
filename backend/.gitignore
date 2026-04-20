@@ -1,0 +1,63 @@
+# 编译产物与可执行文件（与模块名一致）
+/xhw-service
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go 测试与缓存
+*.test
+*.out
+*.prof
+*.pprof
+coverage.*
+coverage.html
+/vendor/
+
+# Go 工作区与工具缓存
+go.work
+go.work.sum
+.cache/
+
+# 依赖与构建目录
+/bin/
+/dist/
+/build/
+/tmp/
+
+# 环境变量与本地密钥（勿提交真实密钥）
+.env
+.env.*
+!.env.example
+*.local.yaml
+config/config.local.yaml
+
+# 日志与运行时
+*.log
+logs/
+
+# IDE 与编辑器
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json.example
+*.swp
+*.swo
+*~
+
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Air（热重载）等本地工具
+tmp/
+
+# Swagger 若由 swag 本地生成且与仓库不同步，可取消下一行注释
+# docs/docs.go
+# docs/swagger.json
+# docs/swagger.yaml
+
+xhw-service
