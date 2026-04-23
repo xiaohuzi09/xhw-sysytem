@@ -6,6 +6,7 @@ export interface PresignUploadRequest {
   bucket: string;
   key: string;
   expire?: number; // 过期时间（秒），默认3600
+  content_type?: string; // 文件 Content-Type，如 image/png
 }
 
 // 预签名上传响应数据

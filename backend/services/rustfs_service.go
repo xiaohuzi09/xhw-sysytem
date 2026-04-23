@@ -20,8 +20,8 @@ func NewRustFSService() (*RustFSService, error) {
 }
 
 // GetPresignedUploadURL 获取上传预签名URL
-func (s *RustFSService) GetPresignedUploadURL(ctx context.Context, bucket, key string, expire time.Duration) (string, error) {
-	return s.client.PresignPutObject(ctx, bucket, key, expire)
+func (s *RustFSService) GetPresignedUploadURL(ctx context.Context, bucket, key string, expire time.Duration, contentType string) (string, error) {
+	return s.client.PresignPutObject(ctx, bucket, key, expire, contentType)
 }
 
 // GetPresignedDownloadURL 获取下载预签名URL

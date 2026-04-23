@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"bytes"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -24,6 +25,40 @@ import (
 
 type ImageService struct {
 	app *application.App
+}
+
+// getAppWorkingDir 获取应用工作目录
+// 开发模式下返回当前工作目录；打包后的 macOS 应用（从 Finder 启动时 os.Getwd() 返回 /）返回应用包所在目录
+func getAppWorkingDir() (string, error) {
+	// 1. 先尝试当前工作目录，验证是否可写
+	wd, err := os.Getwd()
+	if err == nil && wd != "/" {
+		testFile := filepath.Join(wd, ".write_test")
+		if f, err := os.Create(testFile); err == nil {
+			f.Close()
+			os.Remove(testFile)
+			return wd, nil
+		}
+	}
+
+	// 2. 获取可执行文件路径
+	ex, err := os.Executable()
+	if err != nil {
+		return "", fmt.Errorf("获取应用路径失败: %v", err)
+	}
+	ex, err = filepath.EvalSymlinks(ex)
+	if err != nil {
+		return "", fmt.Errorf("解析应用路径失败: %v", err)
+	}
+
+	// 3. macOS 打包应用: xxx.app/Contents/MacOS/xxx -> 返回 xxx.app 的父目录
+	if idx := strings.Index(ex, ".app/Contents/MacOS/"); idx > 0 {
+		appBundlePath := ex[:idx+4] // 包含 ".app"
+		return filepath.Dir(appBundlePath), nil
+	}
+
+	// 4. 其他情况：返回可执行文件所在目录
+	return filepath.Dir(ex), nil
 }
 
 // ImageTemplate 图片模板结构
@@ -81,8 +116,8 @@ func (s *ImageService) SelectImages() ([]string, error) {
 
 // SaveImageToCurrentFolder 保存图片到当前文件夹
 func (s *ImageService) SaveImageToCurrentFolder(sourcePath string) (string, error) {
-	// 获取当前工作目录
-	currentDir, err := os.Getwd()
+	// 获取应用工作目录
+	currentDir, err := getAppWorkingDir()
 	if err != nil {
 		return "", fmt.Errorf("获取当前目录失败: %v", err)
 	}
@@ -186,7 +221,7 @@ func (s *ImageService) DeleteTemplate(id string) error {
 
 // saveTemplates 保存模板到文件
 func (s *ImageService) saveTemplates() error {
-	currentDir, err := os.Getwd()
+	currentDir, err := getAppWorkingDir()
 	if err != nil {
 		return err
 	}
@@ -202,7 +237,7 @@ func (s *ImageService) saveTemplates() error {
 
 // loadTemplates 从文件加载模板
 func (s *ImageService) loadTemplates() error {
-	currentDir, err := os.Getwd()
+	currentDir, err := getAppWorkingDir()
 	if err != nil {
 		return err
 	}
@@ -451,7 +486,7 @@ func (s *ImageService) CombineImagesWithTemplates(templateInfos []TemplateInfo, 
 	}
 
 	// 合成目录: 当前目录/合成
-	currentDir, err := os.Getwd()
+	currentDir, err := getAppWorkingDir()
 	if err != nil {
 		return "", fmt.Errorf("获取当前目录失败: %v", err)
 	}
@@ -572,7 +607,7 @@ func (s *ImageService) CountCombinedImagesByMaterialCodes(materialCodes []string
 		counts[materialCode] = 0
 	}
 
-	currentDir, err := os.Getwd()
+	currentDir, err := getAppWorkingDir()
 	if err != nil {
 		return nil, fmt.Errorf("获取当前目录失败: %v", err)
 	}
@@ -664,7 +699,7 @@ func (s *ImageService) CombineImages(templateIDs []string, sourcePaths []string)
 	}
 
 	// 合成目录: 当前目录/合成
-	currentDir, err := os.Getwd()
+	currentDir, err := getAppWorkingDir()
 	if err != nil {
 		return "", fmt.Errorf("获取当前目录失败: %v", err)
 	}
@@ -843,6 +878,45 @@ func (s *ImageService) GetImageBase64(imagePath string) (string, error) {
 	// 转换为 base64
 	base64Str := base64.StdEncoding.EncodeToString(data)
 	return fmt.Sprintf("data:%s;base64,%s", mimeType, base64Str), nil
+}
+
+// UploadToPresignedURL 使用预签名URL上传图片数据（绕过WebKit网络栈，解决打包应用中的连接问题）
+func (s *ImageService) UploadToPresignedURL(url string, base64Data string, contentType string) error {
+	// 从 data URI 中提取实际的 base64 内容
+	var encoded string
+	if idx := strings.Index(base64Data, ","); idx >= 0 {
+		encoded = base64Data[idx+1:]
+	} else {
+		encoded = base64Data
+	}
+
+	data, err := base64.StdEncoding.DecodeString(encoded)
+	if err != nil {
+		return fmt.Errorf("base64 解码失败: %v", err)
+	}
+
+	req, err := http.NewRequest(http.MethodPut, url, bytes.NewReader(data))
+	if err != nil {
+		return fmt.Errorf("创建请求失败: %v", err)
+	}
+	req.Header.Set("Content-Type", contentType)
+	req.ContentLength = int64(len(data))
+
+	fmt.Printf("[UploadToPresignedURL] 开始上传, 大小: %d bytes, Content-Type: %s\n", len(data), contentType)
+
+	client := &http.Client{Timeout: 120 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		return fmt.Errorf("上传请求失败: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 400 {
+		body, _ := io.ReadAll(resp.Body)
+		return fmt.Errorf("上传失败, 状态码: %d, 响应: %s", resp.StatusCode, string(body))
+	}
+
+	return nil
 }
 
 // ServiceStartup 服务启动时调用

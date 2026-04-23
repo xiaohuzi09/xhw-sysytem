@@ -24,9 +24,10 @@ func NewRustFSController() (*RustFSController, error) {
 
 // PresignUploadRequest 上传预签名请求
 type PresignUploadRequest struct {
-	Bucket string `json:"bucket" binding:"required"`
-	Key    string `json:"key" binding:"required"`
-	Expire int    `json:"expire"` // 过期时间（秒），默认3600
+	Bucket      string `json:"bucket" binding:"required"`
+	Key         string `json:"key" binding:"required"`
+	Expire      int    `json:"expire"`       // 过期时间（秒），默认3600
+	ContentType string `json:"content_type"` // 文件 Content-Type，如 image/png
 }
 
 // PresignUploadResponse 上传预签名响应
@@ -59,7 +60,7 @@ func (rc *RustFSController) GetPresignedUploadURL(c *gin.Context) {
 		expire = time.Hour
 	}
 
-	url, err := rc.service.GetPresignedUploadURL(c.Request.Context(), req.Bucket, req.Key, expire)
+	url, err := rc.service.GetPresignedUploadURL(c.Request.Context(), req.Bucket, req.Key, expire, req.ContentType)
 	if err != nil {
 		utils.Fail(c, 500, "获取预签名URL失败: "+err.Error())
 		return

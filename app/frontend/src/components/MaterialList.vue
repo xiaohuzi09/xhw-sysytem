@@ -17,7 +17,6 @@ import type {
   MaterialInfo,
 } from "../../bindings/changeme/services/models";
 import type { Material } from "../api/material";
-import axios from "axios";
 
 const materials = ref<Material[]>([]);
 const loading = ref(false);
@@ -96,6 +95,20 @@ const fileToBase64 = (file: File): Promise<string> => {
   });
 };
 
+// 根据文件扩展名推断 Content-Type
+const getContentType = (fileName: string): string => {
+  const ext = fileName.split(".").pop()?.toLowerCase() || "";
+  const map: Record<string, string> = {
+    jpg: "image/jpeg",
+    jpeg: "image/jpeg",
+    png: "image/png",
+    gif: "image/gif",
+    webp: "image/webp",
+    bmp: "image/bmp",
+  };
+  return map[ext] || "application/octet-stream";
+};
+
 // 上传单个文件到云存储
 const uploadSingleFile = async (file: File): Promise<string> => {
   // 生成云存储的 key
@@ -104,31 +117,36 @@ const uploadSingleFile = async (file: File): Promise<string> => {
   const randomStr = Math.random().toString(36).substring(2, 8);
   const key = `materials/${timestamp}_${randomStr}.${ext}`;
 
-  // 请求预签名上传链接
-  const presignResult = await apiGetPresignUpload({
-    bucket: "xhw",
-    key: key,
-    expire: 3600,
-  });
+  const contentType = getContentType(file.name);
+
+  // 步骤1: 请求预签名上传链接（带上 Content-Type，确保签名匹配）
+  let presignResult: any;
+  try {
+    presignResult = await apiGetPresignUpload({
+      bucket: "xhw",
+      key: key,
+      expire: 3600,
+      content_type: contentType,
+    });
+  } catch (err: any) {
+    throw new Error(`获取预签名链接失败: ${err?.message || err}`);
+  }
+
+  if (!presignResult?.data?.url) {
+    throw new Error("预签名链接为空");
+  }
 
   // 获取文件 base64 数据
   const base64Data = await fileToBase64(file);
-  // 将 base64 转换为 Blob
-  const base64Content = base64Data.split(",")[1];
-  const byteCharacters = atob(base64Content);
-  const byteNumbers = new Array(byteCharacters.length);
-  for (let i = 0; i < byteCharacters.length; i++) {
-    byteNumbers[i] = byteCharacters.charCodeAt(i);
-  }
-  const byteArray = new Uint8Array(byteNumbers);
-  const blob = new Blob([byteArray]);
 
-  // 使用预签名 URL 上传
-  await axios.put(presignResult.data.url, blob, {
-    headers: {
-      "Content-Type": "application/octet-stream",
-    },
-  });
+  // 步骤2: 使用 Go 后端方法上传，绕过 WebKit 网络栈
+  try {
+    await ImageService.UploadToPresignedURL(presignResult.data.url, base64Data, contentType);
+  } catch (err: any) {
+    const status = err?.response?.status;
+    const msg = err?.response?.data?.message || err?.message || "网络错误";
+    throw new Error(`上传到云存储失败(${status || "?"}): ${msg}`);
+  }
 
   // 返回云存储路径
   return presignResult.data.url.split("?")[0];
@@ -168,8 +186,9 @@ const handleFileSelect = async (event: Event) => {
       successCount++;
       uploadCurrent.value = successCount;
     } catch (error: any) {
+      const errMsg = error?.message || String(error);
       console.error(`上传图片 ${file.name} 失败:`, error);
-      ElMessage.error(`上传失败: ${file.name}`);
+      ElMessage.error(`${file.name}: ${errMsg}`);
     }
   }
 
@@ -457,6 +476,7 @@ const startCombine = async () => {
     combineProgressText.value = `0 / ${totalTasks}`;
 
     // 同步逐个处理，一个完成后再处理下一个
+    const failedMaterials: string[] = [];
     for (const material of materials) {
       try {
         // 每次传一个素材，但传所有模板，实际会生成 模板数 张图片
@@ -465,8 +485,10 @@ const startCombine = async () => {
         ]);
         // 每次调用完成，增加的已完成任务数 = 模板数量
         completedTasks += selectedTemplates.length;
-      } catch (error) {
+      } catch (error: any) {
+        const errMsg = error?.message || String(error);
         console.error(`合成失败: ${material.code}`, error);
+        failedMaterials.push(`${material.code || "无编号"}: ${errMsg}`);
         // 即使失败也计入进度，否则进度条会卡住
         completedTasks += selectedTemplates.length;
       }
@@ -477,13 +499,23 @@ const startCombine = async () => {
     combineProgress.value = 100;
     combineProgressText.value = "合成完成";
 
-    ElMessage.success(`合成完成，共 ${totalTasks} 张图片`);
-
-    // 关闭弹窗
-    setTimeout(() => {
-      showCombineModal.value = false;
-      selectedMaterials.value = [];
-    }, 1000);
+    if (failedMaterials.length === 0) {
+      ElMessage.success(`合成完成，共 ${totalTasks} 张图片`);
+      // 关闭弹窗
+      setTimeout(() => {
+        showCombineModal.value = false;
+        selectedMaterials.value = [];
+      }, 1000);
+    } else {
+      const successCount = materials.length - failedMaterials.length;
+      if (successCount > 0) {
+        ElMessage.warning(
+          `${successCount} 张素材合成成功，${failedMaterials.length} 张失败`
+        );
+      } else {
+        ElMessage.error(`合成全部失败: ${failedMaterials[0]}`);
+      }
+    }
   } catch (error: any) {
     ElMessage.error(`合成失败: ${error.message || error}`);
     combineProgress.value = 0;

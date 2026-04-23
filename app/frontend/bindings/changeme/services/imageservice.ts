@@ -87,6 +87,13 @@ export function SelectImages(): $CancellablePromise<string[]> {
     });
 }
 
+/**
+ * UploadToPresignedURL 使用预签名URL上传图片数据（绕过WebKit网络栈，解决打包应用中的连接问题）
+ */
+export function UploadToPresignedURL(url: string, base64Data: string, contentType: string): $CancellablePromise<void> {
+    return $Call.ByID(1276081350, url, base64Data, contentType);
+}
+
 // Private type creation functions
 const $$createType0 = $Create.Map($Create.Any, $Create.Any);
 const $$createType1 = $models.ImageTemplate.createFrom;

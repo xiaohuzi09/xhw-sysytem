@@ -10,7 +10,6 @@ import {
 } from "../api/template";
 import { apiGetPresignUpload } from "../api/presign";
 import type { Template } from "../api/template";
-import axios from "axios";
 
 const templates = ref<Template[]>([]);
 const loading = ref(false);
@@ -526,33 +525,25 @@ const saveAddTemplate = async () => {
     const timestamp = Date.now();
     const key = `templates/${addName.value}_${timestamp}.${ext}`;
 
-    // 请求预签名上传链接
-    const presignResult = await apiGetPresignUpload({
-      bucket: "xhw",
-      key: key,
-      expire: 3600,
-    });
-
     // 获取图片 base64 数据
     const base64Data = await ImageService.GetImageBase64(
       addSelectedImagePath.value,
     );
-    // 将 base64 转换为 Blob
-    const base64Content = base64Data.split(",")[1];
-    const byteCharacters = atob(base64Content);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray]);
 
-    // 使用预签名 URL 上传
-    await axios.put(presignResult.data.url, blob, {
-      headers: {
-        "Content-Type": "application/octet-stream",
-      },
+    // 从 data URI 提取 MIME type
+    const mimeMatch = base64Data.match(/^data:([^;]+);base64,/);
+    const contentType = mimeMatch ? mimeMatch[1] : "application/octet-stream";
+
+    // 请求预签名上传链接（带上 Content-Type，确保签名匹配）
+    const presignResult = await apiGetPresignUpload({
+      bucket: "xhw",
+      key: key,
+      expire: 3600,
+      content_type: contentType,
     });
+
+    // 使用 Go 后端方法上传，绕过 WebKit 网络栈
+    await ImageService.UploadToPresignedURL(presignResult.data.url, base64Data, contentType);
 
     // 获取云存储路径
     const cloudPath = presignResult.data.url.split("?")[0];
@@ -573,7 +564,9 @@ const saveAddTemplate = async () => {
     ElMessage.success("模板添加成功");
     await loadTemplates();
   } catch (error: any) {
-    ElMessage.error(`添加模板失败: ${error.message || error}`);
+    const status = error?.response?.status;
+    const detail = error?.response?.data?.message || error?.message || error;
+    ElMessage.error(`添加模板失败${status ? "(" + status + ")" : ""}: ${detail}`);
   } finally {
     loading.value = false;
   }

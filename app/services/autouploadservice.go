@@ -964,8 +964,8 @@ func (s *AutoUploadService) getImagePathsByColor(color string, imagePaths []stri
 // 文件名格式: 任务批号-模板名称-颜色-素材编号-时间戳.png
 // 返回匹配素材编号的第一个图片路径
 func (s *AutoUploadService) findMaterialImageByCode(materialCode string) (string, error) {
-	// 获取当前工作目录
-	currentDir, err := os.Getwd()
+	// 获取应用工作目录
+	currentDir, err := getAppWorkingDir()
 	if err != nil {
 		return "", fmt.Errorf("获取当前目录失败: %w", err)
 	}
@@ -1009,8 +1009,8 @@ func (s *AutoUploadService) findMaterialImageByCode(materialCode string) (string
 // findImagesByMaterialCode 从合成目录中查找所有匹配素材编号的图片
 // 文件名格式: 任务批号-模板名称-颜色-素材编号-时间戳.png
 func (s *AutoUploadService) findImagesByMaterialCode(materialCode string) ([]string, error) {
-	// 获取当前工作目录
-	currentDir, err := os.Getwd()
+	// 获取应用工作目录
+	currentDir, err := getAppWorkingDir()
 	if err != nil {
 		return nil, fmt.Errorf("获取当前目录失败: %w", err)
 	}

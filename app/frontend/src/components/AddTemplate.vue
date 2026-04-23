@@ -3,7 +3,6 @@ import { ref, computed, watch } from "vue";
 import { ImageService } from "../../bindings/changeme/services";
 import { apiCreateTemplate } from "../api/template";
 import { apiGetPresignUpload } from "../api/presign";
-import axios from "axios";
 
 const emit = defineEmits<{
   templateAdded: [];
@@ -162,48 +161,51 @@ const addTemplate = async () => {
   try {
     loading.value = true;
     message.value = "正在获取上传链接...";
+    console.log("[AddTemplate] 开始上传流程");
 
     // 生成云存储的 key
     const ext = selectedImagePath.value.split(".").pop() || "png";
     const timestamp = Date.now();
     const key = `templates/${templateName.value}_${timestamp}.${ext}`;
+    console.log("[AddTemplate] 生成 key:", key);
 
-    // 请求预签名上传链接
+    // 获取图片 base64 数据
+    console.log("[AddTemplate] 获取图片 base64...");
+    const base64Data = await ImageService.GetImageBase64(
+      selectedImagePath.value,
+    );
+    console.log("[AddTemplate] base64 长度:", base64Data?.length);
+
+    // 从 data URI 提取 MIME type
+    const mimeMatch = base64Data.match(/^data:([^;]+);base64,/);
+    const contentType = mimeMatch ? mimeMatch[1] : "application/octet-stream";
+    console.log("[AddTemplate] 检测到 MIME type:", contentType);
+
+    // 请求预签名上传链接（带上 Content-Type，确保签名匹配）
+    console.log("[AddTemplate] 请求预签名 URL, bucket=xhw, key=", key, "content_type=", contentType);
     const presignResult = await apiGetPresignUpload({
       bucket: "xhw",
       key: key,
       expire: 3600,
+      content_type: contentType,
     });
+    console.log("[AddTemplate] 预签名 URL 获取成功, url=", presignResult.data.url.substring(0, 80) + "...");
 
     message.value = "正在上传图片...";
 
-    // 获取图片 base64 数据
-    const base64Data = await ImageService.GetImageBase64(
-      selectedImagePath.value,
-    );
-    // 将 base64 转换为 Blob
-    const base64Content = base64Data.split(",")[1]; // 去除 data:image/xxx;base64, 前缀
-    const byteCharacters = atob(base64Content);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray]);
-
-    // 使用预签名 URL 上传
-    await axios.put(presignResult.data.url, blob, {
-      headers: {
-        "Content-Type": "application/octet-stream",
-      },
-    });
+    // 使用 Go 后端方法上传，绕过 WebKit 网络栈
+    console.log("[AddTemplate] 调用 ImageService.UploadToPresignedURL...");
+    await ImageService.UploadToPresignedURL(presignResult.data.url, base64Data, contentType);
+    console.log("[AddTemplate] 上传成功");
 
     // 获取云存储路径
     const cloudPath = presignResult.data.url.split("?")[0]; // 去除查询参数，保留基础 URL
+    console.log("[AddTemplate] 云存储路径:", cloudPath);
 
     message.value = "正在添加模板...";
 
     // 调用 API 创建模板
+    console.log("[AddTemplate] 调用 apiCreateTemplate...");
     await apiCreateTemplate({
       name: templateName.value,
       width: width.value,
@@ -214,6 +216,7 @@ const addTemplate = async () => {
       offset_y: offsetY.value,
       url: cloudPath,
     });
+    console.log("[AddTemplate] apiCreateTemplate 成功");
 
     message.value = "模板添加成功";
 
@@ -231,8 +234,10 @@ const addTemplate = async () => {
     // 通知父组件刷新列表
     emit("templateAdded");
   } catch (error: any) {
-    console.error("添加模板失败:", error);
-    message.value = `添加模板失败: ${error.message || error}`;
+    console.error("[AddTemplate] 添加模板失败:", error);
+    const status = error?.response?.status;
+    const detail = error?.response?.data?.message || error?.message || error;
+    message.value = `添加模板失败${status ? "(" + status + ")" : ""}: ${detail}`;
   } finally {
     loading.value = false;
   }

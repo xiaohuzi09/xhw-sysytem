@@ -330,12 +330,16 @@ func (r *RustFSClient) PresignGetObject(ctx context.Context, bucket, key string,
 }
 
 // PresignPutObject 生成上传预签名URL
-func (r *RustFSClient) PresignPutObject(ctx context.Context, bucket, key string, expire time.Duration) (string, error) {
+func (r *RustFSClient) PresignPutObject(ctx context.Context, bucket, key string, expire time.Duration, contentType string) (string, error) {
 	presignClient := s3.NewPresignClient(r.client)
-	req, err := presignClient.PresignPutObject(ctx, &s3.PutObjectInput{
+	input := &s3.PutObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
-	}, s3.WithPresignExpires(expire))
+	}
+	if contentType != "" {
+		input.ContentType = aws.String(contentType)
+	}
+	req, err := presignClient.PresignPutObject(ctx, input, s3.WithPresignExpires(expire))
 	if err != nil {
 		return "", err
 	}
