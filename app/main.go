@@ -16,7 +16,6 @@ var assets embed.FS
 func main() {
 	imageService := &services.ImageService{}
 	autoUploadService := &services.AutoUploadService{}
-	greetService := &services.GreetService{}
 
 	err := wails.Run(&options.App{
 		Title:  "图片模板管理器",
@@ -29,12 +28,10 @@ func main() {
 		OnStartup: func(ctx context.Context) {
 			imageService.Startup(ctx)
 			autoUploadService.Startup(ctx)
-			greetService.Startup(ctx)
 		},
 		Bind: []interface{}{
 			imageService,
 			autoUploadService,
-			greetService,
 		},
 	})
 
