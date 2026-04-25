@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { ImageService } from "../../bindings/changeme/services";
+import { SelectImage, GetImageBase64, UploadToPresignedURL } from "@wailsjs/go/services/ImageService";
 import {
   apiGetTemplates,
   apiDeleteTemplate,
@@ -245,7 +245,7 @@ const viewTemplate = async (template: Template) => {
       previewImageBase64.value = imageUrl;
     } else if (template.imagePath) {
       // 本地路径，调用后端读取
-      const base64 = await ImageService.GetImageBase64(template.imagePath);
+      const base64 = await GetImageBase64(template.imagePath);
       previewImageBase64.value = base64;
     } else {
       ElMessage.warning("该模板没有关联的图片");
@@ -300,7 +300,7 @@ const openEditTemplate = async (template: Template) => {
       editImageBase64.value = imageUrl;
     } else if (template.imagePath) {
       // 本地路径，调用后端读取
-      const base64 = await ImageService.GetImageBase64(template.imagePath);
+      const base64 = await GetImageBase64(template.imagePath);
       editImageBase64.value = base64;
     } else {
       ElMessage.warning("该模板没有关联的图片");
@@ -402,7 +402,7 @@ watch(addSelectedImagePath, async (newPath) => {
   }
 
   try {
-    const base64Data = await ImageService.GetImageBase64(newPath);
+    const base64Data = await GetImageBase64(newPath);
     addImageBase64.value = base64Data;
   } catch (error: any) {
     ElMessage.error(`加载图片失败: ${error.message || error}`);
@@ -478,7 +478,7 @@ const validateAddHeight = () => {
 const selectAddImage = async () => {
   try {
     loading.value = true;
-    const path = await ImageService.SelectImage();
+    const path = await SelectImage();
     if (path) {
       addSelectedImagePath.value = path;
     }
@@ -526,7 +526,7 @@ const saveAddTemplate = async () => {
     const key = `templates/${addName.value}_${timestamp}.${ext}`;
 
     // 获取图片 base64 数据
-    const base64Data = await ImageService.GetImageBase64(
+    const base64Data = await GetImageBase64(
       addSelectedImagePath.value,
     );
 
@@ -543,7 +543,7 @@ const saveAddTemplate = async () => {
     });
 
     // 使用 Go 后端方法上传，绕过 WebKit 网络栈
-    await ImageService.UploadToPresignedURL(presignResult.data.url, base64Data, contentType);
+    await UploadToPresignedURL(presignResult.data.url, base64Data, contentType);
 
     // 获取云存储路径
     const cloudPath = presignResult.data.url.split("?")[0];

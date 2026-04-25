@@ -10,12 +10,11 @@ import (
 	"time"
 
 	"github.com/playwright-community/playwright-go"
-	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
 // AutoUploadService 自动上传服务
 type AutoUploadService struct {
-	app              *application.App
+	ctx              context.Context
 	page             playwright.Page
 	pw               *playwright.Playwright
 	browser          playwright.Browser
@@ -45,11 +44,10 @@ type UploadResult struct {
 	URL     string `json:"url,omitempty"`
 }
 
-// ServiceStartup 服务启动时调用
-func (s *AutoUploadService) ServiceStartup(ctx context.Context, options application.ServiceOptions) error {
-	s.app = application.Get()
+// Startup 服务启动时调用
+func (s *AutoUploadService) Startup(ctx context.Context) {
+	s.ctx = ctx
 	s.loginConfirmChan = make(chan bool, 1)
-	return nil
 }
 
 // InitBrowser 初始化浏览器

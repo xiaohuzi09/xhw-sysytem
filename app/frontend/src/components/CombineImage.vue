@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
-import { ImageService } from "../../bindings/changeme/services";
-import type {
-  TemplateInfo,
-  MaterialInfo,
-} from "../../bindings/changeme/services/models";
+import { GetImageBase64, CombineImagesWithTemplates, SelectImages } from "@wailsjs/go/services/ImageService";
+import { services } from "@wailsjs/go/models";
 import { apiGetTemplates } from "../api/template";
 import type { Template } from "../api/template";
 
@@ -234,11 +231,11 @@ watch(
         } catch {
           // 跨域失败，通过后端加载
           console.log("跨域加载失败，通过后端加载");
-          imageSrc = await ImageService.GetImageBase64(imageUrl);
+          imageSrc = await GetImageBase64(imageUrl);
         }
       } else {
         // 本地路径，通过后端加载
-        imageSrc = await ImageService.GetImageBase64(imageUrl);
+        imageSrc = await GetImageBase64(imageUrl);
       }
 
       console.log("预览图片加载成功");
@@ -286,13 +283,13 @@ const selectImages = async () => {
   try {
     loading.value = true;
     message.value = "";
-    const paths: string[] = await (ImageService as any).SelectImages();
+    const paths: string[] = await SelectImages();
     if (!paths || paths.length === 0) return;
 
     selectedImagePaths.value = paths;
     selectedImagePath.value = paths[0];
 
-    const base64 = await ImageService.GetImageBase64(selectedImagePath.value);
+    const base64 = await GetImageBase64(selectedImagePath.value);
     imageBase64.value = base64;
 
     // 读取原图尺寸
@@ -404,7 +401,7 @@ const startCombine = async () => {
     message.value = "";
 
     // 获取选中模板的完整信息
-    const selectedTemplates: TemplateInfo[] = templates.value
+    const selectedTemplates: services.TemplateInfo[] = templates.value
       .filter((t) => t.id && selectedTemplateIds.value.includes(t.id))
       .map((t) => ({
         id: t.id!,
@@ -419,14 +416,14 @@ const startCombine = async () => {
       }));
 
     // 将图片路径转换为 MaterialInfo 格式（本地文件没有编号，使用文件名）
-    const materials: MaterialInfo[] = selectedImagePaths.value.map((path) => {
+    const materials: services.MaterialInfo[] = selectedImagePaths.value.map((path) => {
       // 从路径中提取文件名作为编号
       const fileName = path.split("/").pop() || "";
       const code = fileName.replace(/\.[^.]+$/, ""); // 去掉扩展名
       return { url: path, code };
     });
 
-    const resultDir = await ImageService.CombineImagesWithTemplates(
+    const resultDir = await CombineImagesWithTemplates(
       selectedTemplates,
       materials,
     );

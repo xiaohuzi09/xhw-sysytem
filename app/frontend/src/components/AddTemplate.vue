@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
-import { ImageService } from "../../bindings/changeme/services";
+import { SelectImage, GetImageBase64, UploadToPresignedURL } from "@wailsjs/go/services/ImageService";
 import { apiCreateTemplate } from "../api/template";
 import { apiGetPresignUpload } from "../api/presign";
 
@@ -46,7 +46,7 @@ watch(selectedImagePath, async (newPath) => {
     }
 
     // 调用后端方法获取 base64 图片
-    const base64Data = await ImageService.GetImageBase64(newPath);
+    const base64Data = await GetImageBase64(newPath);
     imageBase64.value = base64Data;
   } catch (error: any) {
     message.value = `加载图片失败: ${error.message || error}`;
@@ -134,7 +134,7 @@ const selectImage = async () => {
   try {
     loading.value = true;
     message.value = "";
-    const path = await ImageService.SelectImage();
+    const path = await SelectImage();
     if (path) {
       selectedImagePath.value = path;
       message.value = `已选择: ${path}`;
@@ -171,7 +171,7 @@ const addTemplate = async () => {
 
     // 获取图片 base64 数据
     console.log("[AddTemplate] 获取图片 base64...");
-    const base64Data = await ImageService.GetImageBase64(
+    const base64Data = await GetImageBase64(
       selectedImagePath.value,
     );
     console.log("[AddTemplate] base64 长度:", base64Data?.length);
@@ -195,7 +195,7 @@ const addTemplate = async () => {
 
     // 使用 Go 后端方法上传，绕过 WebKit 网络栈
     console.log("[AddTemplate] 调用 ImageService.UploadToPresignedURL...");
-    await ImageService.UploadToPresignedURL(presignResult.data.url, base64Data, contentType);
+    await UploadToPresignedURL(presignResult.data.url, base64Data, contentType);
     console.log("[AddTemplate] 上传成功");
 
     // 获取云存储路径

@@ -11,11 +11,8 @@ import {
 import { apiGetPresignUpload } from "../api/presign";
 import { apiGetTemplates } from "../api/template";
 import type { Template } from "../api/template";
-import { ImageService } from "../../bindings/changeme/services";
-import type {
-  TemplateInfo,
-  MaterialInfo,
-} from "../../bindings/changeme/services/models";
+import { UploadToPresignedURL, CombineImagesWithTemplates } from "@wailsjs/go/services/ImageService";
+import { services } from "@wailsjs/go/models";
 import type { Material } from "../api/material";
 
 const materials = ref<Material[]>([]);
@@ -141,7 +138,7 @@ const uploadSingleFile = async (file: File): Promise<string> => {
 
   // 步骤2: 使用 Go 后端方法上传，绕过 WebKit 网络栈
   try {
-    await ImageService.UploadToPresignedURL(presignResult.data.url, base64Data, contentType);
+    await UploadToPresignedURL(presignResult.data.url, base64Data, contentType);
   } catch (err: any) {
     const status = err?.response?.status;
     const msg = err?.response?.data?.message || err?.message || "网络错误";
@@ -443,13 +440,13 @@ const startCombine = async () => {
     combineLoading.value = true;
 
     // 获取选中素材的信息（URL 和编号）
-    const materials: MaterialInfo[] = selectedMaterials.value.map((m) => ({
+    const materials: services.MaterialInfo[] = selectedMaterials.value.map((m) => ({
       url: m.url,
       code: String(m.code || ""),
     }));
 
     // 获取选中模板的完整信息
-    const selectedTemplates: TemplateInfo[] = templates.value
+    const selectedTemplates: services.TemplateInfo[] = templates.value
       .filter((t) => t.id && selectedTemplateIds.value.includes(t.id))
       .map((t) => ({
         id: t.id!,
@@ -480,7 +477,7 @@ const startCombine = async () => {
     for (const material of materials) {
       try {
         // 每次传一个素材，但传所有模板，实际会生成 模板数 张图片
-        await ImageService.CombineImagesWithTemplates(selectedTemplates, [
+        await CombineImagesWithTemplates(selectedTemplates, [
           material,
         ]);
         // 每次调用完成，增加的已完成任务数 = 模板数量

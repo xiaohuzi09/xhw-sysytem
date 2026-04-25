@@ -20,11 +20,11 @@ import (
 
 	xdraw "golang.org/x/image/draw"
 
-	"github.com/wailsapp/wails/v3/pkg/application"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 type ImageService struct {
-	app *application.App
+	ctx context.Context
 }
 
 // getAppWorkingDir 获取应用工作目录
@@ -80,14 +80,16 @@ var templates []ImageTemplate
 
 // SelectImage 选择图片文件
 func (s *ImageService) SelectImage() (string, error) {
-	if s.app == nil {
+	if s.ctx == nil {
 		return "", fmt.Errorf("应用未初始化")
 	}
 
-	result, err := s.app.Dialog.OpenFile().
-		SetTitle("选择图片").
-		AddFilter("图片文件", "*.jpg;*.jpeg;*.png;*.gif;*.bmp;*.webp").
-		PromptForSingleSelection()
+	result, err := runtime.OpenFileDialog(s.ctx, runtime.OpenDialogOptions{
+		Title: "选择图片",
+		Filters: []runtime.FileFilter{
+			{DisplayName: "图片文件", Pattern: "*.jpg;*.jpeg;*.png;*.gif;*.bmp;*.webp"},
+		},
+	})
 
 	if err != nil {
 		return "", err
@@ -98,14 +100,16 @@ func (s *ImageService) SelectImage() (string, error) {
 
 // SelectImages 选择多张图片文件
 func (s *ImageService) SelectImages() ([]string, error) {
-	if s.app == nil {
+	if s.ctx == nil {
 		return nil, fmt.Errorf("应用未初始化")
 	}
 
-	result, err := s.app.Dialog.OpenFile().
-		SetTitle("选择图片").
-		AddFilter("图片文件", "*.jpg;*.jpeg;*.png;*.gif;*.bmp;*.webp").
-		PromptForMultipleSelection()
+	result, err := runtime.OpenMultipleFilesDialog(s.ctx, runtime.OpenDialogOptions{
+		Title: "选择图片",
+		Filters: []runtime.FileFilter{
+			{DisplayName: "图片文件", Pattern: "*.jpg;*.jpeg;*.png;*.gif;*.bmp;*.webp"},
+		},
+	})
 
 	if err != nil {
 		return nil, err
@@ -919,8 +923,8 @@ func (s *ImageService) UploadToPresignedURL(url string, base64Data string, conte
 	return nil
 }
 
-// ServiceStartup 服务启动时调用
-func (s *ImageService) ServiceStartup(ctx context.Context, options application.ServiceOptions) error {
-	s.app = application.Get()
-	return s.loadTemplates()
+// Startup 服务启动时调用
+func (s *ImageService) Startup(ctx context.Context) {
+	s.ctx = ctx
+	s.loadTemplates()
 }

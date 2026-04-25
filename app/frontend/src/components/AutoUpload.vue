@@ -4,15 +4,11 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { apiGetMaterials } from "../api/material";
 import type { Material } from "../api/material";
 import {
-  UploadProductDianxiaomi,
   UploadProductsDianxiaomi,
   ConfirmLogin,
-} from "../../bindings/changeme/services/autouploadservice";
-import { ImageService } from "../../bindings/changeme/services";
-import {
-  LoginConfig,
-  ProductInfo,
-} from "../../bindings/changeme/services/models";
+} from "@wailsjs/go/services/AutoUploadService";
+import { CountCombinedImagesByMaterialCodes } from "@wailsjs/go/services/ImageService";
+import { services } from "@wailsjs/go/models";
 
 const materials = ref<Material[]>([]);
 const loading = ref(false);
@@ -69,7 +65,7 @@ const loadCombinedImageCounts = async () => {
 
   try {
     combinedImageCounts.value =
-      await ImageService.CountCombinedImagesByMaterialCodes(materialCodes);
+      await CountCombinedImagesByMaterialCodes(materialCodes);
   } catch (error) {
     combinedImageCounts.value = {};
     console.error("读取合成图片数量失败:", error);
@@ -123,7 +119,7 @@ const confirmUpload = async () => {
 
   try {
     // 构建登录配置
-    const loginConfig = new LoginConfig({
+    const loginConfig = new services.LoginConfig({
       url: loginForm.url,
       username: loginForm.username,
       password: loginForm.password,
@@ -131,14 +127,14 @@ const confirmUpload = async () => {
     });
 
     // 构建商品信息映射（批量上传）
-    const products: { [key: string]: ProductInfo } = {};
+    const products: { [key: string]: services.ProductInfo } = {};
 
     for (const material of selectedMaterials.value) {
       // 使用素材编号作为 productID
       const productID = material.code.toString();
 
       // 构建产品信息
-      const productInfo = new ProductInfo({
+      const productInfo = new services.ProductInfo({
         titleCh: material.title_cn || `商品${material.code}`,
         titleEn: material.title_en || `Product ${material.code}`,
         materialImg: material.url, // 使用素材URL作为素材图
