@@ -4,7 +4,7 @@ import { reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { apiLogin } from "../api/auth";
-import { persistAdminAfterLogin, setAuthToken } from "../utils/auth";
+import { persistAdminAfterLogin, persistUserAfterLogin, setAuthToken } from "../utils/auth";
 
 const route = useRoute();
 const router = useRouter();
@@ -46,6 +46,10 @@ const handleLogin = async () => {
 
     setAuthToken(token);
     persistAdminAfterLogin({ ...(result.data ?? {}), token });
+    console.log("[login] result:", result);
+    console.log("[login] result.data:", result.data);
+    console.log("[login] result.data.user:", result.data?.user);
+    persistUserAfterLogin(result.data?.user);
     ElMessage.success("登录成功");
     await router.replace(resolveRedirectPath());
   } catch (error: any) {

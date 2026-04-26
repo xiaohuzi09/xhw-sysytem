@@ -54,6 +54,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import("../components/UserManage.vue"),
         meta: { title: "用户管理", requiresAdmin: true },
       },
+      {
+        path: "config",
+        name: "ConfigView",
+        component: () => import("../components/ConfigView.vue"),
+        meta: { title: "系统配置" },
+      },
     ],
   },
 ];

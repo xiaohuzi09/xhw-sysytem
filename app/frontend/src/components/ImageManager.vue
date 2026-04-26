@@ -3,16 +3,36 @@ import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import {
+  Avatar,
   Collection,
   PictureFilled,
+  Setting,
   SwitchButton,
   UploadFilled,
   UserFilled,
 } from "@element-plus/icons-vue";
-import { clearAuthToken, isAdmin } from "../utils/auth";
+import { clearAuthToken, getCurrentUser, isAdmin } from "../utils/auth";
 
 const router = useRouter();
 const logoutLoading = ref(false);
+
+const currentUser = computed(() => {
+  const user = getCurrentUser();
+  console.log("[ImageManager] getCurrentUser:", user);
+  if (!user) return null;
+  return {
+    displayName: user.nickname?.trim() || user.username || "用户",
+    username: user.username || "",
+    avatar: user.avatar?.trim() || "",
+    roleLabel: user.role === "admin" ? "管理员" : "普通用户",
+    isAdmin: user.role === "admin",
+  };
+});
+
+const avatarText = computed(() => {
+  const name = currentUser.value?.displayName || "";
+  return name.charAt(0).toUpperCase();
+});
 
 const baseNavigationItems = [
   {
@@ -32,6 +52,12 @@ const baseNavigationItems = [
     label: "自动上传",
     desc: "批量同步到店小秘",
     icon: UploadFilled,
+  },
+  {
+    to: "/config",
+    label: "系统配置",
+    desc: "运行环境与接口配置",
+    icon: Setting,
   },
 ];
 
@@ -109,6 +135,36 @@ const handleLogout = async () => {
             </span>
           </router-link>
         </nav>
+
+        <div v-if="currentUser" class="user-section">
+          <div class="user-card">
+            <div class="user-avatar">
+              <img
+                v-if="currentUser.avatar"
+                :src="currentUser.avatar"
+                :alt="currentUser.displayName"
+                class="avatar-img"
+              />
+              <div v-else class="avatar-fallback">
+                <el-icon :size="18">
+                  <Avatar />
+                </el-icon>
+              </div>
+            </div>
+            <div class="user-meta">
+              <div class="user-name-row">
+                <span class="user-display-name">{{ currentUser.displayName }}</span>
+                <span
+                  class="user-role-tag"
+                  :class="currentUser.isAdmin ? 'role-admin' : 'role-user'"
+                >
+                  {{ currentUser.roleLabel }}
+                </span>
+              </div>
+              <span class="user-username">@{{ currentUser.username }}</span>
+            </div>
+          </div>
+        </div>
 
         <div class="logout-section">
           <div class="logout-tip">安全退出当前账号</div>
@@ -307,10 +363,112 @@ const handleLogout = async () => {
   color: #6366f1;
 }
 
-.logout-section {
+.user-section {
   margin-top: auto;
   padding-top: 18px;
   border-top: 1px solid #e2e8f0;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: #f8fafc;
+  border: 1px solid transparent;
+  transition: all 0.3s;
+}
+
+.user-card:hover {
+  background: #fff;
+  border-color: rgba(99, 102, 241, 0.12);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+}
+
+.user-avatar {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 55%, #7c3aed 100%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-fallback {
+  width: 100%;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.user-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.user-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.user-display-name {
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-role-tag {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.user-role-tag.role-admin {
+  color: #4f46e5;
+  background: #eef2ff;
+}
+
+.user-role-tag.role-user {
+  color: #0f766e;
+  background: #f0fdfa;
+}
+
+.user-username {
+  color: #94a3b8;
+  font-size: 12px;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logout-section {
+  padding-top: 14px;
 }
 
 .logout-tip {
