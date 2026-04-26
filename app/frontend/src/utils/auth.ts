@@ -3,6 +3,7 @@ export const AUTH_LOGIN_PATH = "/v1/auth/login";
 
 /** 与 token 同生命周期：退出登录时清除 */
 const AUTH_ADMIN_SESSION_KEY = "app-image-handle-is-admin";
+const AUTH_USER_SESSION_KEY = "app-image-handle-user";
 
 export function getAuthToken(): string {
   return localStorage.getItem(AUTH_TOKEN_KEY) || "";
@@ -16,9 +17,50 @@ function clearAdminSession() {
   sessionStorage.removeItem(AUTH_ADMIN_SESSION_KEY);
 }
 
+function clearUserSession() {
+  sessionStorage.removeItem(AUTH_USER_SESSION_KEY);
+}
+
 export function clearAuthToken() {
   localStorage.removeItem(AUTH_TOKEN_KEY);
   clearAdminSession();
+  clearUserSession();
+}
+
+/** 当前登录用户信息 */
+export interface CurrentUser {
+  id?: number;
+  username: string;
+  nickname?: string;
+  avatar?: string;
+  role?: string;
+}
+
+/** 登录成功后保存用户信息 */
+export function persistUserAfterLogin(user: CurrentUser | undefined) {
+  if (user) {
+    sessionStorage.setItem(AUTH_USER_SESSION_KEY, JSON.stringify(user));
+  }
+}
+
+/** 获取当前登录用户信息（优先从 sessionStorage，否则从 JWT 解码） */
+export function getCurrentUser(): CurrentUser | null {
+  const cached = sessionStorage.getItem(AUTH_USER_SESSION_KEY);
+  if (cached) {
+    try {
+      return JSON.parse(cached) as CurrentUser;
+    } catch {
+      // ignore parse error
+    }
+  }
+  const payload = decodeJwtPayload(getAuthToken());
+  if (payload) {
+    return {
+      username: (payload.username as string) || (payload.sub as string) || "",
+      role: (payload.role as string) || "",
+    };
+  }
+  return null;
 }
 
 export function hasAuthToken(): boolean {

@@ -75,14 +75,9 @@ pnpm-debug.log*
 # ============================================
 # Wails (app/)
 # ============================================
-# Build outputs
+# Build outputs (compiled binaries only — keep platform packaging templates)
 app/bin/
 app/build/bin/
-app/build/darwin/
-app/build/windows/
-app/build/linux/
-app/build/android/
-app/build/ios/
 
 # Wails generated bindings (optional, usually generated at build time)
 # Uncomment if bindings are auto-generated and shouldn't be committed
