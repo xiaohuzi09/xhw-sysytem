@@ -1,0 +1,215 @@
+:root {
+  color-scheme: light;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+    "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", sans-serif;
+  --apple-bg: #f5f5f7;
+  --apple-surface: #ffffff;
+  --apple-surface-muted: #fafafa;
+  --apple-surface-raised: rgba(255, 255, 255, 0.92);
+  --apple-border: #d8d8dc;
+  --apple-border-soft: #ececf0;
+  --apple-text: #1d1d1f;
+  --apple-text-secondary: #515154;
+  --apple-text-muted: #86868b;
+  --apple-blue: #0071e3;
+  --apple-blue-hover: #0077ed;
+  --apple-blue-soft: #e8f2ff;
+  --apple-green: #2f9b57;
+  --apple-orange: #bf7b00;
+  --apple-red: #d70015;
+  --apple-radius-sm: 6px;
+  --apple-radius: 10px;
+  --apple-radius-lg: 14px;
+  --apple-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+  --apple-shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --el-color-primary: var(--apple-blue);
+  --el-color-primary-light-3: #2997ff;
+  --el-color-primary-light-5: #66b5ff;
+  --el-color-primary-light-7: #b9dcff;
+  --el-color-primary-light-8: #d8ebff;
+  --el-color-primary-light-9: var(--apple-blue-soft);
+  --el-color-primary-dark-2: #005bb5;
+  --el-border-radius-base: var(--apple-radius-sm);
+  --el-border-color: var(--apple-border);
+  --el-border-color-light: var(--apple-border-soft);
+  --el-text-color-primary: var(--apple-text);
+  --el-text-color-regular: var(--apple-text-secondary);
+  --el-text-color-secondary: var(--apple-text-muted);
+  --el-fill-color-light: var(--apple-surface-muted);
+  --el-fill-color-blank: var(--apple-surface);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  background: var(--apple-bg);
+  color: var(--apple-text);
+  font-family: inherit;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  overflow: hidden;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+.el-button {
+  border-radius: var(--apple-radius-sm);
+  font-weight: 500;
+  letter-spacing: 0;
+  box-shadow: none;
+}
+
+.el-button--primary {
+  border-color: var(--apple-blue);
+  background: var(--apple-blue);
+}
+
+.el-button--primary:hover,
+.el-button--primary:focus {
+  border-color: var(--apple-blue-hover);
+  background: var(--apple-blue-hover);
+}
+
+.el-button.is-text,
+.el-button--text,
+.el-button.is-link,
+.el-button--primary.is-link {
+  color: var(--apple-blue);
+}
+
+.el-input__wrapper,
+.el-textarea__inner,
+.el-select__wrapper {
+  border-radius: var(--apple-radius-sm);
+  background: var(--apple-surface);
+  box-shadow: 0 0 0 1px var(--apple-border) inset;
+}
+
+.el-input__wrapper:hover,
+.el-textarea__inner:hover,
+.el-select__wrapper:hover {
+  box-shadow: 0 0 0 1px #c6c6cb inset;
+}
+
+.el-input__wrapper.is-focus,
+.el-textarea__inner:focus,
+.el-select__wrapper.is-focused {
+  box-shadow:
+    0 0 0 1px var(--apple-blue) inset,
+    0 0 0 3px rgba(0, 113, 227, 0.14);
+}
+
+.el-table {
+  --el-table-border-color: var(--apple-border-soft);
+  --el-table-header-bg-color: #fbfbfd;
+  --el-table-row-hover-bg-color: #f5f9ff;
+  color: var(--apple-text-secondary);
+  border-radius: var(--apple-radius);
+}
+
+.el-table th.el-table__cell {
+  background: #fbfbfd;
+  color: var(--apple-text-secondary);
+  font-weight: 600;
+}
+
+.el-table .el-table__cell {
+  padding: 10px 0;
+}
+
+.el-dialog {
+  border-radius: var(--apple-radius-lg);
+  box-shadow: var(--apple-shadow);
+}
+
+.el-dialog__header {
+  padding: 20px 24px 10px;
+  margin: 0;
+}
+
+.el-dialog__title {
+  color: var(--apple-text);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.el-dialog__body {
+  padding: 12px 24px 18px;
+}
+
+.el-dialog__footer {
+  padding: 0 24px 22px;
+}
+
+.el-tag {
+  border-radius: 999px;
+  font-weight: 500;
+}
+
+.el-pagination.is-background .el-pager li {
+  border-radius: var(--apple-radius-sm);
+  background: var(--apple-surface);
+  border: 1px solid var(--apple-border-soft);
+}
+
+.el-pagination.is-background .btn-prev,
+.el-pagination.is-background .btn-next {
+  border-radius: var(--apple-radius-sm);
+  background: var(--apple-surface);
+  border: 1px solid var(--apple-border-soft);
+}
+
+.el-message-box {
+  border-radius: var(--apple-radius-lg);
+}
+
+.apple-page {
+  width: 100%;
+  padding: 16px;
+}
+
+.apple-toolbar,
+.apple-panel {
+  border: 1px solid var(--apple-border-soft);
+  border-radius: var(--apple-radius-lg);
+  background: var(--apple-surface);
+  box-shadow: var(--apple-shadow-soft);
+}
+
+.apple-page-title {
+  margin: 0;
+  color: var(--apple-text);
+  font-size: 21px;
+  line-height: 1.25;
+  font-weight: 650;
+  letter-spacing: 0;
+}
+
+.apple-page-desc {
+  margin: 4px 0 0;
+  color: var(--apple-text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}

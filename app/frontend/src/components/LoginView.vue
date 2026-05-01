@@ -62,9 +62,6 @@ const handleLogin = async () => {
 
 <template>
   <div class="login-page">
-    <div class="bg-orb orb-left" />
-    <div class="bg-orb orb-right" />
-
     <section class="login-shell">
       <div class="login-brand-panel">
         <div class="brand-badge">
@@ -74,9 +71,9 @@ const handleLogin = async () => {
           图片模板管理器
         </div>
 
-        <h1>更高效地管理图片模板与素材上传</h1>
+        <h1>图片合成工作台</h1>
         <p class="brand-desc">
-          统一维护模板、素材与自动上传流程，让内容生产更轻量、更稳定。
+          管理模板、素材和上传流程。
         </p>
 
         <div class="brand-highlights">
@@ -108,7 +105,7 @@ const handleLogin = async () => {
 
       <div class="login-form-panel">
         <div class="login-header">
-          <p class="welcome-label">Welcome back</p>
+          <p class="welcome-label">登录</p>
           <h2>登录账号</h2>
           <p class="login-subtitle">请输入账号密码后继续使用系统</p>
         </div>
@@ -165,252 +162,185 @@ const handleLogin = async () => {
 
 <style scoped>
 .login-page {
-  position: relative;
   width: 100%;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.2) 0, transparent 30%),
-    radial-gradient(circle at 85% 20%, rgba(14, 165, 233, 0.2) 0, transparent 28%),
-    linear-gradient(135deg, #f8faff 0%, #eef2ff 45%, #f8fbff 100%);
+  background: var(--apple-bg);
   padding: 24px;
-  box-sizing: border-box;
-}
-
-.bg-orb {
-  position: absolute;
-  border-radius: 999px;
-  filter: blur(12px);
-  opacity: 0.8;
-  pointer-events: none;
-}
-
-.orb-left {
-  left: -120px;
-  bottom: 10%;
-  width: 280px;
-  height: 280px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent 70%);
-}
-
-.orb-right {
-  right: -100px;
-  top: 12%;
-  width: 320px;
-  height: 320px;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.18), transparent 70%);
 }
 
 .login-shell {
-  position: relative;
-  z-index: 1;
   width: 100%;
-  max-width: 980px;
+  max-width: 860px;
   display: grid;
-  grid-template-columns: minmax(320px, 1.05fr) minmax(360px, 0.95fr);
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.82);
-  box-shadow:
-    0 28px 60px rgba(30, 41, 59, 0.12),
-    0 10px 26px rgba(59, 130, 246, 0.08);
-  backdrop-filter: blur(20px);
+  grid-template-columns: minmax(280px, 0.9fr) minmax(360px, 1.1fr);
+  border: 1px solid var(--apple-border-soft);
+  border-radius: 18px;
+  background: var(--apple-surface);
+  box-shadow: var(--apple-shadow);
   overflow: hidden;
 }
 
 .login-brand-panel {
   position: relative;
-  padding: 56px 48px;
-  background:
-    linear-gradient(160deg, rgba(37, 99, 235, 0.96) 0%, rgba(79, 70, 229, 0.94) 50%, rgba(91, 33, 182, 0.96) 100%);
-  color: #fff;
-  overflow: hidden;
-}
-
-.login-brand-panel::after {
-  content: "";
-  position: absolute;
-  right: -72px;
-  bottom: -72px;
-  width: 220px;
-  height: 220px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
+  padding: 44px 36px;
+  background: #fbfbfd;
+  border-right: 1px solid var(--apple-border-soft);
+  color: var(--apple-text);
 }
 
 .brand-badge {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 18px;
+  padding: 8px 12px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  font-size: 14px;
+  background: var(--apple-blue-soft);
+  color: var(--apple-blue);
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.02em;
 }
 
 .login-brand-panel h1 {
-  margin: 32px 0 0;
-  max-width: 360px;
-  font-size: 42px;
+  margin: 28px 0 0;
+  font-size: 30px;
   line-height: 1.2;
-  letter-spacing: -0.04em;
+  font-weight: 700;
+  letter-spacing: 0;
 }
 
 .brand-desc {
-  margin: 20px 0 0;
-  max-width: 380px;
-  color: rgba(239, 246, 255, 0.9);
-  font-size: 15px;
-  line-height: 1.8;
+  margin: 12px 0 0;
+  color: var(--apple-text-muted);
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .brand-highlights {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  margin-top: 56px;
+  gap: 10px;
+  margin-top: 36px;
 }
 
 .highlight-item {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px 18px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--apple-surface);
+  border: 1px solid var(--apple-border-soft);
 }
 
 .highlight-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.16);
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #f2f2f4;
+  color: var(--apple-text-secondary);
 }
 
 .highlight-item strong {
   display: block;
-  font-size: 15px;
-  font-weight: 700;
+  color: var(--apple-text);
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .highlight-item p {
   margin: 4px 0 0;
-  font-size: 13px;
-  color: rgba(239, 246, 255, 0.84);
+  font-size: 12px;
+  color: var(--apple-text-muted);
 }
 
 .login-form-panel {
-  padding: 56px 48px 48px;
-  background: rgba(255, 255, 255, 0.72);
+  padding: 44px 44px 40px;
+  background: var(--apple-surface);
 }
 
 .login-header {
-  margin-bottom: 32px;
+  margin-bottom: 28px;
 }
 
 .welcome-label {
   margin: 0;
-  color: #4f46e5;
+  color: var(--apple-blue);
   font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  font-weight: 600;
 }
 
 .login-header h2 {
-  margin: 12px 0 0;
-  color: #0f172a;
-  font-size: 34px;
+  margin: 8px 0 0;
+  color: var(--apple-text);
+  font-size: 26px;
   line-height: 1.2;
-  letter-spacing: -0.04em;
+  font-weight: 650;
+  letter-spacing: 0;
 }
 
 .login-subtitle {
-  margin: 12px 0 0;
-  color: #64748b;
+  margin: 10px 0 0;
+  color: var(--apple-text-muted);
   font-size: 14px;
-  line-height: 1.7;
+  line-height: 1.5;
 }
 
 .login-button {
   width: 100%;
-  height: 52px;
+  height: 44px;
   margin-top: 6px;
-  border: none;
-  border-radius: 16px;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  background: linear-gradient(90deg, #2563eb 0%, #4f46e5 55%, #7c3aed 100%);
-  box-shadow: 0 16px 32px rgba(79, 70, 229, 0.22);
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0;
 }
 
 .login-tip {
-  margin: 16px 0 0;
+  margin: 14px 0 0;
   text-align: center;
-  color: #94a3b8;
-  font-size: 13px;
+  color: var(--apple-text-muted);
+  font-size: 12px;
 }
 
 :deep(.el-form-item) {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 :deep(.el-form-item__label) {
-  margin-bottom: 10px;
-  color: #334155;
-  font-size: 14px;
+  margin-bottom: 8px;
+  color: var(--apple-text-secondary);
+  font-size: 13px;
   font-weight: 600;
   line-height: 1.2;
 }
 
 :deep(.el-input__wrapper) {
-  min-height: 52px;
-  padding: 0 18px;
-  border-radius: 16px;
-  background: #f8fafc;
-  box-shadow: 0 0 0 1px #e2e8f0 inset;
-  transition:
-    box-shadow 0.2s ease,
-    background 0.2s ease,
-    transform 0.2s ease;
+  min-height: 42px;
+  padding: 0 12px;
 }
 
 :deep(.el-input__wrapper:hover) {
-  background: #fff;
-  box-shadow: 0 0 0 1px #cbd5e1 inset;
-}
-
-:deep(.el-input__wrapper.is-focus) {
-  background: #fff;
-  box-shadow:
-    0 0 0 1px rgba(79, 70, 229, 0.72) inset,
-    0 0 0 4px rgba(79, 70, 229, 0.1);
-  transform: translateY(-1px);
+  background: var(--apple-surface);
 }
 
 :deep(.el-input__inner) {
-  color: #0f172a;
+  color: var(--apple-text);
   font-size: 14px;
-  font-weight: 500;
 }
 
 :deep(.el-input__inner::placeholder) {
-  color: #94a3b8;
+  color: var(--apple-text-muted);
 }
 
 :deep(.el-input__prefix) {
-  color: #64748b;
+  color: var(--apple-text-muted);
 }
 
 @media (max-width: 860px) {
@@ -420,24 +350,21 @@ const handleLogin = async () => {
   }
 
   .login-brand-panel {
-    padding: 40px 32px 36px;
+    padding: 32px;
+    border-right: none;
+    border-bottom: 1px solid var(--apple-border-soft);
   }
 
   .login-brand-panel h1 {
-    max-width: none;
-    font-size: 34px;
-  }
-
-  .brand-desc {
-    max-width: none;
+    font-size: 26px;
   }
 
   .brand-highlights {
-    margin-top: 32px;
+    margin-top: 24px;
   }
 
   .login-form-panel {
-    padding: 38px 32px 36px;
+    padding: 32px;
   }
 }
 
@@ -454,7 +381,7 @@ const handleLogin = async () => {
 
   .login-brand-panel h1,
   .login-header h2 {
-    font-size: 30px;
+    font-size: 24px;
   }
 }
 </style>

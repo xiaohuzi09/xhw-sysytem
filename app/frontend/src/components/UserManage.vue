@@ -310,8 +310,8 @@ onMounted(() => {
 
 <style scoped>
 .user-manage {
-  padding: 20px 24px 32px;
-  max-width: 1200px;
+  width: 100%;
+  padding: 16px;
 }
 
 .page-head {
@@ -319,31 +319,48 @@ onMounted(() => {
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 20px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  border: 1px solid var(--apple-border-soft);
+  border-radius: 14px;
+  background: var(--apple-surface);
+  box-shadow: var(--apple-shadow-soft);
 }
 
 .page-head h2 {
   margin: 0 0 6px;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #111827;
+  font-size: 21px;
+  font-weight: 650;
+  color: var(--apple-text);
 }
 
 .sub {
   margin: 0;
   font-size: 13px;
-  color: #6b7280;
+  color: var(--apple-text-muted);
 }
 
 .user-table {
   width: 100%;
-  border-radius: 12px;
+  border: 1px solid var(--apple-border-soft);
+  border-radius: 14px;
   overflow: hidden;
+  box-shadow: var(--apple-shadow-soft);
 }
 
 .pager {
   margin-top: 16px;
   display: flex;
   justify-content: flex-end;
+}
+
+@media (max-width: 760px) {
+  .user-manage {
+    padding: 12px;
+  }
+
+  .page-head {
+    flex-direction: column;
+  }
 }
 </style>
