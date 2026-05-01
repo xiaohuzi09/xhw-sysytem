@@ -98,9 +98,6 @@ const handleLogout = async () => {
 
 <template>
   <div class="image-manager">
-    <div class="manager-orb orb-top" />
-    <div class="manager-orb orb-bottom" />
-
     <div class="layout-wrapper">
       <!-- 左侧：导航菜单 -->
       <div class="sidebar">
@@ -192,97 +189,59 @@ const handleLogout = async () => {
 
 <style scoped>
 .image-manager {
-  position: relative;
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  background:
-    radial-gradient(circle at top right, rgba(79, 70, 229, 0.16), transparent 32%),
-    radial-gradient(circle at 12% 20%, rgba(14, 165, 233, 0.12), transparent 28%),
-    #eef2ff;
-}
-
-.manager-orb {
-  position: absolute;
-  border-radius: 999px;
-  pointer-events: none;
-  filter: blur(8px);
-}
-
-.orb-top {
-  top: 72px;
-  right: 15%;
-  width: 220px;
-  height: 220px;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.18), transparent 70%);
-}
-
-.orb-bottom {
-  left: 180px;
-  bottom: -120px;
-  width: 280px;
-  height: 280px;
-  background: radial-gradient(circle, rgba(14, 165, 233, 0.14), transparent 70%);
+  background: var(--apple-bg);
 }
 
 .layout-wrapper {
-  position: relative;
-  z-index: 1;
   display: flex;
   height: 100vh;
-  padding: 0;
-  gap: 0;
 }
 
 .sidebar {
-  width: 248px;
-  min-width: 248px;
-  height: calc(100vh - 24px);
-  margin: 12px 0 12px 12px;
-  padding: 20px 14px 16px;
+  width: 250px;
+  min-width: 250px;
+  height: 100vh;
+  padding: 18px 12px 14px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.88);
-  box-shadow:
-    0 24px 50px rgba(15, 23, 42, 0.08),
-    0 8px 20px rgba(79, 70, 229, 0.06);
-  backdrop-filter: blur(16px);
+  border-right: 1px solid var(--apple-border-soft);
+  background: #fbfbfd;
 }
 
 .brand-block {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 4px 6px 20px;
+  gap: 12px;
+  padding: 2px 8px 18px;
 }
 
 .brand-logo {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 54px;
-  height: 54px;
-  border-radius: 18px;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   color: #fff;
-  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 55%, #7c3aed 100%);
-  box-shadow: 0 16px 28px rgba(79, 70, 229, 0.24);
+  background: var(--apple-blue);
 }
 
 .brand-meta h1 {
   margin: 0;
-  color: #0f172a;
-  font-size: 17px;
-  font-weight: 800;
+  color: var(--apple-text);
+  font-size: 16px;
+  font-weight: 650;
   line-height: 1.2;
-  letter-spacing: -0.04em;
+  letter-spacing: 0;
 }
 
 .brand-meta p {
-  margin: 6px 0 0;
-  color: #64748b;
+  margin: 4px 0 0;
+  color: var(--apple-text-muted);
   font-size: 12px;
   line-height: 1.3;
 }
@@ -290,109 +249,103 @@ const handleLogout = async () => {
 .tabs {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 4px;
 }
 
 .tab-button {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 12px 14px;
-  border: none;
-  background: #f8fafc;
-  border-radius: 20px;
-  color: #475569;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  color: var(--apple-text-secondary);
   cursor: pointer;
-  transition: all 0.3s;
   text-decoration: none;
   border: 1px solid transparent;
+  transition:
+    background 0.16s ease,
+    border-color 0.16s ease,
+    color 0.16s ease;
 }
 
 .tab-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 14px;
-  background: #e2e8f0;
-  color: #475569;
-  transition: all 0.3s;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: #f0f0f2;
+  color: var(--apple-text-muted);
 }
 
 .tab-text {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   min-width: 0;
 }
 
 .tab-text strong {
   color: inherit;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.2;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .tab-text small {
-  color: #94a3b8;
+  color: var(--apple-text-muted);
   font-size: 12px;
   line-height: 1.3;
 }
 
 .tab-button:hover {
-  transform: translateY(-1px);
-  background: #fff;
-  border-color: rgba(99, 102, 241, 0.12);
-  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.06);
+  background: #f2f2f4;
 }
 
 .tab-button.active {
-  color: #3730a3;
-  background: linear-gradient(135deg, #eef2ff 0%, #eff6ff 100%);
-  border-color: rgba(79, 70, 229, 0.18);
-  box-shadow: 0 16px 30px rgba(79, 70, 229, 0.12);
+  color: var(--apple-text);
+  background: var(--apple-surface);
+  border-color: var(--apple-border-soft);
+  box-shadow: var(--apple-shadow-soft);
 }
 
 .tab-button.active .tab-icon {
   color: #fff;
-  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 55%, #7c3aed 100%);
+  background: var(--apple-blue);
 }
 
 .tab-button.active .tab-text small {
-  color: #6366f1;
+  color: var(--apple-blue);
 }
 
 .user-section {
   margin-top: auto;
-  padding-top: 18px;
-  border-top: 1px solid #e2e8f0;
+  padding-top: 14px;
+  border-top: 1px solid var(--apple-border-soft);
 }
 
 .user-card {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: 18px;
-  background: #f8fafc;
-  border: 1px solid transparent;
-  transition: all 0.3s;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--apple-surface);
+  border: 1px solid var(--apple-border-soft);
 }
 
 .user-card:hover {
-  background: #fff;
-  border-color: rgba(99, 102, 241, 0.12);
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+  border-color: var(--apple-border);
 }
 
 .user-avatar {
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  border-radius: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
   overflow: hidden;
-  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 55%, #7c3aed 100%);
+  background: var(--apple-blue);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -430,9 +383,9 @@ const handleLogout = async () => {
 }
 
 .user-display-name {
-  color: #0f172a;
+  color: var(--apple-text);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.2;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -449,17 +402,17 @@ const handleLogout = async () => {
 }
 
 .user-role-tag.role-admin {
-  color: #4f46e5;
-  background: #eef2ff;
+  color: var(--apple-blue);
+  background: var(--apple-blue-soft);
 }
 
 .user-role-tag.role-user {
-  color: #0f766e;
-  background: #f0fdfa;
+  color: var(--apple-green);
+  background: #ecf8f0;
 }
 
 .user-username {
-  color: #94a3b8;
+  color: var(--apple-text-muted);
   font-size: 12px;
   line-height: 1.3;
   overflow: hidden;
@@ -468,30 +421,29 @@ const handleLogout = async () => {
 }
 
 .logout-section {
-  padding-top: 14px;
+  padding-top: 12px;
 }
 
 .logout-tip {
-  padding: 0 8px 10px;
-  color: #94a3b8;
+  padding: 0 8px 8px;
+  color: var(--apple-text-muted);
   font-size: 12px;
 }
 
 .logout-button {
   width: 100%;
   justify-content: flex-start;
-  height: 50px;
-  padding: 0 18px;
-  color: #64748b;
-  font-size: 15px;
-  font-weight: 700;
-  border-radius: 16px;
-  background: #f8fafc;
+  height: 38px;
+  padding: 0 10px;
+  color: var(--apple-text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
 }
 
 .logout-button:hover {
-  color: #dc2626;
-  background-color: #fef2f2;
+  color: var(--apple-red);
+  background-color: #fff2f4;
 }
 
 .tab-content {
@@ -505,6 +457,7 @@ const handleLogout = async () => {
   width: 100%;
   height: 100%;
   overflow-y: auto;
+  background: var(--apple-bg);
 }
 
 @media (max-width: 980px) {
@@ -517,20 +470,22 @@ const handleLogout = async () => {
     width: 100%;
     min-width: 0;
     height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--apple-border-soft);
   }
 
   .tabs {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
 
   .tab-button {
-    padding: 12px;
+    padding: 9px 10px;
   }
 
   .tab-icon {
-    width: 40px;
-    height: 40px;
+    width: 28px;
+    height: 28px;
   }
 
   .tab-text small {

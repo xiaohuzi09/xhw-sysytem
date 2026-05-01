@@ -83,71 +83,79 @@ const configItems = computed<ConfigItem[]>(() => [
 
 <style scoped>
 .config-view {
-  padding: 24px 28px;
+  padding: 16px;
 }
 
 .page-header {
-  margin-bottom: 24px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  border: 1px solid var(--apple-border-soft);
+  border-radius: 14px;
+  background: var(--apple-surface);
+  box-shadow: var(--apple-shadow-soft);
 }
 
 .page-header h2 {
   margin: 0;
-  font-size: 22px;
-  font-weight: 800;
-  color: #0f172a;
-  letter-spacing: -0.02em;
+  font-size: 21px;
+  font-weight: 650;
+  color: var(--apple-text);
+  letter-spacing: 0;
 }
 
 .subtitle {
-  margin: 6px 0 0;
-  color: #94a3b8;
-  font-size: 14px;
+  margin: 4px 0 0;
+  color: var(--apple-text-muted);
+  font-size: 13px;
 }
 
 .config-list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
 }
 
 .config-card {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 18px 20px;
-  background: #fff;
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  border-radius: 18px;
-  transition: all 0.3s;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--apple-surface);
+  border: 1px solid var(--apple-border-soft);
+  border-radius: 14px;
+  box-shadow: var(--apple-shadow-soft);
+  transition: border-color 0.16s ease;
 }
 
 .config-card:hover {
-  border-color: rgba(99, 102, 241, 0.2);
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  border-color: var(--apple-border);
 }
 
 .config-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 14px;
-  color: #fff;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
   flex-shrink: 0;
 }
 
 .config-icon.type-primary {
-  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: var(--apple-blue);
+  background: var(--apple-blue-soft);
 }
 .config-icon.type-success {
-  background: linear-gradient(135deg, #059669, #10b981);
+  color: var(--apple-green);
+  background: #ecf8f0;
 }
 .config-icon.type-warning {
-  background: linear-gradient(135deg, #d97706, #f59e0b);
+  color: var(--apple-orange);
+  background: #fff6e5;
 }
 .config-icon.type-info {
-  background: linear-gradient(135deg, #475569, #64748b);
+  color: var(--apple-text-secondary);
+  background: #f2f2f4;
 }
 
 .config-body {
@@ -166,14 +174,14 @@ const configItems = computed<ConfigItem[]>(() => [
 
 .config-label {
   font-size: 14px;
-  font-weight: 700;
-  color: #334155;
+  font-weight: 600;
+  color: var(--apple-text-secondary);
 }
 
 .config-value {
   font-size: 15px;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--apple-text);
   word-break: break-all;
 }
 
@@ -181,17 +189,17 @@ const configItems = computed<ConfigItem[]>(() => [
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 24px;
-  padding: 14px 18px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  color: #64748b;
+  margin-top: 12px;
+  padding: 12px 14px;
+  background: var(--apple-surface);
+  border: 1px solid var(--apple-border-soft);
+  border-radius: 12px;
+  color: var(--apple-text-secondary);
   font-size: 13px;
 }
 
 .config-hint .el-icon {
-  color: #94a3b8;
+  color: var(--apple-text-muted);
   flex-shrink: 0;
 }
 </style>

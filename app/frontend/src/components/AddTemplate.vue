@@ -402,45 +402,48 @@ const addTemplate = async () => {
 
 <style scoped>
 .add-template {
-  display: block;
   width: 100%;
-  box-sizing: border-box;
-  padding: 20px;
+  padding: 16px;
 }
 
 h2 {
-  color: #34495e;
-  margin-bottom: 20px;
-  font-size: 1.5em;
+  margin: 0 0 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--apple-border-soft);
+  border-radius: 14px;
+  background: var(--apple-surface);
+  color: var(--apple-text);
+  font-size: 21px;
+  font-weight: 650;
 }
 
 .message {
   padding: 12px 20px;
-  margin-bottom: 20px;
-  border-radius: 6px;
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background-color: #ecf8f0;
+  color: var(--apple-green);
+  border: 1px solid #c7ebd2;
 }
 
 .message.error {
-  background-color: #f8d7da;
-  color: #721c24;
-  border-color: #f5c6cb;
+  background-color: #fff2f4;
+  color: var(--apple-red);
+  border-color: #ffd0d7;
 }
 
 .content-wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 30px;
+  gap: 12px;
 }
 
-/* 预览区域样式 */
 .preview-section {
-  background: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: var(--apple-surface);
+  padding: 16px;
+  border: 1px solid var(--apple-border-soft);
+  border-radius: 14px;
+  box-shadow: var(--apple-shadow-soft);
 }
 
 .preview-container {
@@ -453,10 +456,10 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f8f9fa;
-  border: 2px dashed #ddd;
-  border-radius: 8px;
-  color: #999;
+  background-color: #fbfbfd;
+  border: 1px dashed var(--apple-border);
+  border-radius: 10px;
+  color: var(--apple-text-muted);
   font-size: 16px;
 }
 
@@ -464,8 +467,8 @@ h2 {
   position: relative;
   width: 100%;
   display: inline-block;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border: 1px solid var(--apple-border-soft);
+  border-radius: 10px;
   overflow: hidden;
 }
 
@@ -477,31 +480,31 @@ h2 {
 
 .rectangle-overlay {
   position: absolute;
-  background-color: rgba(135, 206, 250, 0.4);
-  border: 2px solid rgba(30, 144, 255, 0.8);
+  background-color: rgba(0, 113, 227, 0.12);
+  border: 2px solid rgba(0, 113, 227, 0.9);
   pointer-events: none;
-  box-shadow: 0 0 10px rgba(30, 144, 255, 0.3);
 }
 
 .image-info {
   margin-top: 15px;
   padding: 12px;
-  background-color: #f8f9fa;
-  border-radius: 6px;
+  background-color: #fbfbfd;
+  border: 1px solid var(--apple-border-soft);
+  border-radius: 10px;
   font-size: 14px;
-  color: #555;
+  color: var(--apple-text-secondary);
 }
 
 .image-info p {
   margin: 5px 0;
 }
 
-/* 表单区域样式 */
 .form-section {
-  background: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: var(--apple-surface);
+  padding: 16px;
+  border: 1px solid var(--apple-border-soft);
+  border-radius: 14px;
+  box-shadow: var(--apple-shadow-soft);
 }
 
 .form-group {
@@ -512,25 +515,26 @@ h2 {
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
-  color: #555;
+  color: var(--apple-text-secondary);
 }
 
 .form-group input {
   width: 100%;
   padding: 10px 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 1px solid var(--apple-border);
+  border-radius: 7px;
   font-size: 14px;
   transition: border-color 0.3s;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #4caf50;
+  border-color: var(--apple-blue);
+  box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.14);
 }
 
 .form-group input:disabled {
-  background-color: #f5f5f5;
+  background-color: #f5f5f7;
   cursor: not-allowed;
 }
 
@@ -538,7 +542,7 @@ h2 {
   display: block;
   margin-top: 5px;
   font-size: 12px;
-  color: #999;
+  color: var(--apple-text-muted);
 }
 
 .image-select {
@@ -549,21 +553,24 @@ h2 {
 
 .selected-path {
   padding: 8px 12px;
-  background-color: #f8f9fa;
-  border-radius: 4px;
+  background-color: #fbfbfd;
+  border: 1px solid var(--apple-border-soft);
+  border-radius: 8px;
   font-size: 13px;
-  color: #666;
+  color: var(--apple-text-secondary);
   word-break: break-all;
 }
 
 .btn {
   padding: 10px 20px;
   border: none;
-  border-radius: 4px;
+  border-radius: 7px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  transition: all 0.3s;
+  transition:
+    background-color 0.16s ease,
+    border-color 0.16s ease;
 }
 
 .btn:disabled {
@@ -572,21 +579,21 @@ h2 {
 }
 
 .btn-primary {
-  background-color: #007bff;
+  background-color: var(--apple-blue);
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #0056b3;
+  background-color: var(--apple-blue-hover);
 }
 
 .btn-success {
-  background-color: #28a745;
+  background-color: var(--apple-blue);
   color: white;
 }
 
 .btn-success:hover:not(:disabled) {
-  background-color: #218838;
+  background-color: var(--apple-blue-hover);
 }
 
 .btn-large {
@@ -609,7 +616,7 @@ h2 {
 
 .offset-label {
   min-width: 24px;
-  color: #555;
+  color: var(--apple-text-secondary);
 }
 
 .offset-item input {
