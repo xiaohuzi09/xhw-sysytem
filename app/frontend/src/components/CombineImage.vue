@@ -366,7 +366,18 @@ const drawComposite = () => {
       const dx = rectX + (rectW - dw) / 2;
       const dy = rectY + (rectH - dh) / 2;
 
-      ctx.drawImage(trimmedCanvas, 0, 0, iw, ih, dx, dy, dw, dh);
+      // 旋转：以素材图片中心为原点旋转
+      const rotDeg = template.rotation || 0;
+      if (rotDeg !== 0) {
+        const rad = (rotDeg * Math.PI) / 180;
+        ctx.save();
+        ctx.translate(dx + dw / 2, dy + dh / 2);
+        ctx.rotate(rad);
+        ctx.drawImage(trimmedCanvas, 0, 0, iw, ih, -dw / 2, -dh / 2, dw, dh);
+        ctx.restore();
+      } else {
+        ctx.drawImage(trimmedCanvas, 0, 0, iw, ih, dx, dy, dw, dh);
+      }
     };
     fgImg.onerror = () => {
       message.value = "合成失败，无法读取图片数据";
@@ -413,6 +424,7 @@ const startCombine = async () => {
         url: t.url || "",
         offset_x: getOffsetX(t),
         offset_y: getOffsetY(t),
+        rotation: t.rotation || 0,
       }));
 
     // 将图片路径转换为 MaterialInfo 格式（本地文件没有编号，使用文件名）

@@ -458,6 +458,7 @@ const startCombine = async () => {
         url: t.url || "",
         offset_x: getOffsetX(t),
         offset_y: getOffsetY(t),
+        rotation: t.rotation || 0,
       }));
 
     if (selectedTemplates.length === 0) {

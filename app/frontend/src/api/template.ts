@@ -18,6 +18,7 @@ export interface Template {
   offsetBottom?: number;
   offsetLeft?: number;
   url?: string;
+  rotation?: number;
   createdAt?: string;
 }
 
@@ -30,6 +31,7 @@ export interface CreateTemplateRequest {
   imagePath: string;
   offset_x: number;
   offset_y: number;
+  rotation: number;
   url: string;
 }
 

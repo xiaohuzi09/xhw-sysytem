@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"image"
+	"math"
 	"image/draw"
 	"image/jpeg"
 	"image/png"
@@ -398,9 +399,42 @@ func trimImage(img image.Image) image.Image {
 	return cropped
 }
 
+// rotateImage 将图片顺时针旋转指定角度
+func rotateImage(img image.Image, degrees float64) *image.RGBA {
+	rad := degrees * math.Pi / 180
+	srcBounds := img.Bounds()
+	sw := srcBounds.Dx()
+	sh := srcBounds.Dy()
+
+	cos := math.Abs(math.Cos(rad))
+	sin := math.Abs(math.Sin(rad))
+	newW := int(math.Ceil(float64(sw)*cos + float64(sh)*sin))
+	newH := int(math.Ceil(float64(sw)*sin + float64(sh)*cos))
+
+	dst := image.NewRGBA(image.Rect(0, 0, newW, newH))
+	cx := float64(newW) / 2
+	cy := float64(newH) / 2
+	halfW := float64(sw) / 2
+	halfH := float64(sh) / 2
+
+	for y := 0; y < newH; y++ {
+		for x := 0; x < newW; x++ {
+			// 逆变换：目标坐标 → 源坐标
+			dx := float64(x) - cx
+			dy := float64(y) - cy
+			sx := int(math.Round(dx*math.Cos(-rad)-dy*math.Sin(-rad) + halfW))
+			sy := int(math.Round(dx*math.Sin(-rad)+dy*math.Cos(-rad) + halfH))
+			if sx >= 0 && sx < sw && sy >= 0 && sy < sh {
+				dst.Set(x, y, img.At(sx+srcBounds.Min.X, sy+srcBounds.Min.Y))
+			}
+		}
+	}
+	return dst
+}
+
 // compositeImage 将源图片放入模板中间的框里
 func compositeImage(templateImg image.Image, src image.Image, rectWidth, rectHeight int,
-	offsetTop, offsetRight, offsetBottom, offsetLeft int,
+	offsetTop, offsetRight, offsetBottom, offsetLeft int, rotationDeg float64,
 ) *image.RGBA {
 	tmplBounds := templateImg.Bounds()
 	out := image.NewRGBA(tmplBounds)
@@ -443,19 +477,28 @@ func compositeImage(templateImg image.Image, src image.Image, rectWidth, rectHei
 	scaledImg := image.NewRGBA(image.Rect(0, 0, scaledW, scaledH))
 	xdraw.CatmullRom.Scale(scaledImg, scaledImg.Bounds(), src, srcBounds, xdraw.Over, nil)
 
-	// 让缩放后的图片在框中居中
-	offsetX := rectX + (rectWidth-scaledW)/2
-	offsetY := rectY + (rectHeight-scaledH)/2
+	// 如果需要旋转，对缩放后的图片进行旋转
+	var finalImg image.Image = scaledImg
+	if rotationDeg != 0 {
+		finalImg = rotateImage(scaledImg, rotationDeg)
+	}
+	finalBounds := finalImg.Bounds()
+	finalW := finalBounds.Dx()
+	finalH := finalBounds.Dy()
+
+	// 让图片在框中居中
+	offsetX := rectX + (rectWidth-finalW)/2
+	offsetY := rectY + (rectHeight-finalH)/2
 
 	dstRect := image.Rect(
 		tmplBounds.Min.X+offsetX,
 		tmplBounds.Min.Y+offsetY,
-		tmplBounds.Min.X+offsetX+scaledW,
-		tmplBounds.Min.Y+offsetY+scaledH,
+		tmplBounds.Min.X+offsetX+finalW,
+		tmplBounds.Min.Y+offsetY+finalH,
 	)
 
 	// 带 alpha 的覆盖：透明区域会透出底下的模板
-	draw.Draw(out, dstRect, scaledImg, image.Point{}, draw.Over)
+	draw.Draw(out, dstRect, finalImg, finalBounds.Min, draw.Over)
 
 	return out
 }
@@ -471,6 +514,7 @@ type TemplateInfo struct {
 	URL       string  `json:"url"`
 	OffsetX   int     `json:"offset_x"`
 	OffsetY   int     `json:"offset_y"`
+	Rotation  float64 `json:"rotation"`
 }
 
 // MaterialInfo 用于接收前端传递的素材信息
@@ -561,6 +605,7 @@ func (s *ImageService) CombineImagesWithTemplates(templateInfos []TemplateInfo, 
 				offsetRight,
 				offsetBottom,
 				offsetLeft,
+				templateInfo.Rotation,
 			)
 
 			// 文件名增加模板名称前缀和时间戳，避免多模板时覆盖
@@ -761,8 +806,9 @@ func (s *ImageService) CombineImages(templateIDs []string, sourcePaths []string)
 				template.OffsetTop,
 				template.OffsetRight,
 				template.OffsetBottom,
-				template.OffsetLeft,
-			)
+					template.OffsetLeft,
+					0, // legacy
+				)
 
 			// 提取文件名，去掉 URL 的查询参数，并为每个合成生成唯一文件名
 			srcFileName := srcPath
