@@ -134,7 +134,7 @@ Services are registered in `main.go` via `application.NewService(...)`. Wails v3
 <claude-mem-context>
 # Memory Context
 
-# [xhw-sysytem] recent context, 2026-05-02 2:03pm GMT+8
+# [xhw-sysytem] recent context, 2026-05-02 2:05pm GMT+8
 
 Legend: 🎯session 🔴bugfix 🟣feature 🔄refactor ✅change 🔵discovery ⚖️decision
 Format: ID TIME TYPE TITLE
