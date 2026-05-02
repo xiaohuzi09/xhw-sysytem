@@ -134,13 +134,13 @@ Services are registered in `main.go` via `application.NewService(...)`. Wails v3
 <claude-mem-context>
 # Memory Context
 
-# [xhw-sysytem] recent context, 2026-05-02 2:05pm GMT+8
+# [xhw-sysytem] recent context, 2026-05-02 2:31pm GMT+8
 
 Legend: 🎯session 🔴bugfix 🟣feature 🔄refactor ✅change 🔵discovery ⚖️decision
 Format: ID TIME TYPE TITLE
 Fetch details: get_observations([IDs]) | Search: mem-search skill
 
-Stats: 10 obs (5,881t read) | 0t work
+Stats: 13 obs (6,668t read) | 0t work
 
 ### May 1, 2026
 454 11:50p 🔵 Frontend UI architecture and current "AI style" design system identified
@@ -154,4 +154,7 @@ Stats: 10 obs (5,881t read) | 0t work
 468 " 🔵 Git pull blocked by untracked AGENTS.md file conflict
 467 " ✅ Development branch pull initiated
 469 1:53p ✅ Development branch synchronized with remote after AGENTS.md conflict resolution
+470 2:05p ✅ Development branch pull initiated
+471 2:06p 🔵 Frontend template system architecture explored before development branch sync
+474 " 🟣 Template list table now displays template ID column
 </claude-mem-context>
