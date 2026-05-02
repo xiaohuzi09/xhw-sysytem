@@ -15,6 +15,7 @@ const scale = ref(1.0);
 // 框偏移量：X（水平，向右为正）、Y（垂直，向下为正）
 const offsetX = ref(0);
 const offsetY = ref(0);
+const rotation = ref(0);
 const selectedImagePath = ref("");
 const loading = ref(false);
 const message = ref("");
@@ -110,6 +111,7 @@ const rectangleStyle = computed(() => {
     height: `${rectHeight}px`,
     left: `${left}px`,
     top: `${top}px`,
+    transform: rotation.value ? `rotate(${rotation.value}deg)` : undefined,
   };
 });
 
@@ -214,6 +216,7 @@ const addTemplate = async () => {
       imagePath: cloudPath,
       offset_x: offsetX.value,
       offset_y: offsetY.value,
+      rotation: rotation.value,
       url: cloudPath,
     });
     console.log("[AddTemplate] apiCreateTemplate 成功");
@@ -227,6 +230,7 @@ const addTemplate = async () => {
     scale.value = 1.0;
     offsetX.value = 0;
     offsetY.value = 0;
+    rotation.value = 0;
     selectedImagePath.value = "";
     imageLoaded.value = false;
     imageBase64.value = "";
@@ -388,6 +392,22 @@ const addTemplate = async () => {
           <span class="input-hint"> X 向右为正，Y 向下为正（单位: px）。 </span>
         </div>
 
+        <div class="form-group">
+          <label>旋转角度 (度):</label>
+          <div class="offset-grid">
+            <div class="offset-item">
+              <span class="offset-label">°:</span>
+              <input
+                v-model.number="rotation"
+                type="number"
+                step="1"
+                :disabled="loading || !imageLoaded"
+              />
+            </div>
+          </div>
+          <span class="input-hint"> 素材图片顺时针旋转角度（单位: 度，如 90、180、270）。 </span>
+        </div>
+
         <button
           @click="addTemplate"
           :disabled="loading"
@@ -483,6 +503,7 @@ h2 {
   background-color: rgba(0, 113, 227, 0.12);
   border: 2px solid rgba(0, 113, 227, 0.9);
   pointer-events: none;
+  transition: transform 0.2s ease;
 }
 
 .image-info {

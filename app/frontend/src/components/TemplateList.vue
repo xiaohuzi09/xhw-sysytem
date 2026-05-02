@@ -51,7 +51,7 @@ const editHeight = ref(0);
 const editScale = ref(1);
 const editOffsetX = ref(0);
 const editOffsetY = ref(0);
-
+const editRotation = ref(0);
 const editImageElement = ref<HTMLImageElement | null>(null);
 const editImageNaturalWidth = ref(0);
 const editImageNaturalHeight = ref(0);
@@ -65,6 +65,7 @@ const addHeight = ref(600);
 const addScale = ref(1.0);
 const addOffsetX = ref(0);
 const addOffsetY = ref(0);
+const addRotation = ref(0);
 const addSelectedImagePath = ref("");
 const addImageElement = ref<HTMLImageElement | null>(null);
 const addImageNaturalWidth = ref(0);
@@ -184,6 +185,7 @@ const editRectangleStyle = computed(() => {
     height: `${rectHeight}px`,
     left: `${left}px`,
     top: `${top}px`,
+    transform: editRotation.value ? `rotate(${editRotation.value}deg)` : undefined,
   };
 });
 
@@ -284,6 +286,7 @@ const openEditTemplate = async (template: Template) => {
   editScale.value = template.scale;
   editOffsetX.value = getOffsetX(template);
   editOffsetY.value = getOffsetY(template);
+  editRotation.value = template.rotation || 0;
   editImageBase64.value = "";
   editImageLoaded.value = false;
   showEditModal.value = true;
@@ -376,6 +379,7 @@ const saveEditedTemplate = async () => {
       imagePath: selectedTemplate.value.imagePath,
       offset_x: editOffsetX.value,
       offset_y: editOffsetY.value,
+      rotation: editRotation.value,
       url: selectedTemplate.value.url || selectedTemplate.value.imagePath,
     });
 
@@ -455,6 +459,7 @@ const addRectangleStyle = computed(() => {
     height: `${rectHeight}px`,
     left: `${left}px`,
     top: `${top}px`,
+    transform: addRotation.value ? `rotate(${addRotation.value}deg)` : undefined,
   };
 });
 
@@ -497,6 +502,7 @@ const openAddModal = () => {
   addScale.value = 1.0;
   addOffsetX.value = 0;
   addOffsetY.value = 0;
+  addRotation.value = 0;
   addSelectedImagePath.value = "";
   addImageLoaded.value = false;
   addImageBase64.value = "";
@@ -557,6 +563,7 @@ const saveAddTemplate = async () => {
       imagePath: cloudPath,
       offset_x: addOffsetX.value,
       offset_y: addOffsetY.value,
+      rotation: addRotation.value,
       url: cloudPath,
     });
 
@@ -675,6 +682,12 @@ onMounted(() => {
         <el-table-column label="偏移量" width="160" align="center">
           <template #default="{ row }">
             X: {{ getOffsetX(row) }} / Y: {{ getOffsetY(row) }}
+          </template>
+        </el-table-column>
+
+        <el-table-column label="旋转" width="80" align="center">
+          <template #default="{ row }">
+            {{ row.rotation || 0 }}°
           </template>
         </el-table-column>
 
@@ -837,6 +850,9 @@ onMounted(() => {
                 <el-input-number v-model="editOffsetY" size="small" />
               </div>
             </el-form-item>
+            <el-form-item label="旋转角度 (度)">
+              <el-input-number v-model="editRotation" :step="1" size="small" />
+            </el-form-item>
           </el-form>
         </div>
       </div>
@@ -950,6 +966,14 @@ onMounted(() => {
                 />
               </div>
               <span class="input-hint">X 向右为正，Y 向下为正</span>
+            </el-form-item>
+            <el-form-item label="旋转角度 (度)">
+              <el-input-number
+                v-model="addRotation"
+                :step="1"
+                size="small"
+                :disabled="!addImageLoaded"
+              />
             </el-form-item>
           </el-form>
         </div>
@@ -1210,6 +1234,7 @@ onMounted(() => {
   background-color: rgba(0, 113, 227, 0.12);
   border: 2px solid rgba(0, 113, 227, 0.9);
   pointer-events: none;
+  transition: transform 0.2s ease;
 }
 
 .image-info {

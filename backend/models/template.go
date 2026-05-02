@@ -10,7 +10,8 @@ type Template struct {
 	Height  int     `gorm:"not null;default:0" json:"height"`   // 素材高度
 	OffsetX float64 `gorm:"not null;default:0" json:"offset_x"` // X轴偏移
 	OffsetY float64 `gorm:"not null;default:0" json:"offset_y"` // Y轴偏移
-	Scale   float64 `gorm:"not null;default:1" json:"scale"`    // 缩放比例
+	Scale    float64 `gorm:"not null;default:1" json:"scale"`      // 缩放比例
+	Rotation float64 `gorm:"not null;default:0" json:"rotation"`   // 旋转角度（度数，顺时针）
 }
 
 func (Template) TableName() string {
