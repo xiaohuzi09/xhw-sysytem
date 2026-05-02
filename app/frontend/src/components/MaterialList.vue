@@ -443,6 +443,7 @@ const startCombine = async () => {
     const materials: services.MaterialInfo[] = selectedMaterials.value.map((m) => ({
       url: m.url,
       code: String(m.code || ""),
+      id: String(m.id || ""),
     }));
 
     // 获取选中模板的完整信息

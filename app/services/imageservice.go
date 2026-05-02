@@ -521,6 +521,7 @@ type TemplateInfo struct {
 type MaterialInfo struct {
 	URL  string `json:"url"`  // 素材图片 URL
 	Code string `json:"code"` // 素材编号
+	ID   string `json:"id"`   // 素材ID，用于按文件夹分组
 }
 
 // CombineImagesWithTemplates 使用模板信息合成多张图片
@@ -625,9 +626,18 @@ func (s *ImageService) CombineImagesWithTemplates(templateInfos []TemplateInfo, 
 			// 生成时间戳确保文件名唯一
 			timestamp := time.Now().UnixNano()
 
+			// 确定输出目录：如果有素材ID则按素材ID建子文件夹
+			outDir := combineDir
+			if materialID := strings.TrimSpace(material.ID); materialID != "" {
+				outDir = filepath.Join(combineDir, materialID)
+				if err := os.MkdirAll(outDir, 0755); err != nil {
+					return "", fmt.Errorf("创建素材目录失败: %v", err)
+				}
+			}
+
 			// 生成文件名：任务批号-模版名称-素材编号-时间戳.png
 			outName := fmt.Sprintf("%s-%s-%s-%d.png", batchPrefix, templateName, materialCode, timestamp)
-			outPath := filepath.Join(combineDir, outName)
+			outPath := filepath.Join(outDir, outName)
 
 			outFile, err := os.Create(outPath)
 			if err != nil {
@@ -672,6 +682,23 @@ func (s *ImageService) CountCombinedImagesByMaterialCodes(materialCodes []string
 
 	for _, entry := range entries {
 		if entry.IsDir() {
+			// 扫描子文件夹（按素材ID分组的目录）
+			subEntries, err := os.ReadDir(filepath.Join(combineDir, entry.Name()))
+			if err != nil {
+				continue
+			}
+			for _, subEntry := range subEntries {
+				if subEntry.IsDir() {
+					continue
+				}
+				materialCode, ok := extractMaterialCodeFromCombinedFileName(subEntry.Name())
+				if !ok {
+					continue
+				}
+				if _, exists := counts[materialCode]; exists {
+					counts[materialCode]++
+				}
+			}
 			continue
 		}
 
