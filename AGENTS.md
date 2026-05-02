@@ -134,13 +134,13 @@ Services are registered in `main.go` via `application.NewService(...)`. Wails v3
 <claude-mem-context>
 # Memory Context
 
-# [xhw-sysytem] recent context, 2026-05-02 12:03am GMT+8
+# [xhw-sysytem] recent context, 2026-05-02 2:31pm GMT+8
 
 Legend: 🎯session 🔴bugfix 🟣feature 🔄refactor ✅change 🔵discovery ⚖️decision
 Format: ID TIME TYPE TITLE
 Fetch details: get_observations([IDs]) | Search: mem-search skill
 
-Stats: 4 obs (3,256t read) | 0t work
+Stats: 13 obs (6,668t read) | 0t work
 
 ### May 1, 2026
 454 11:50p 🔵 Frontend UI architecture and current "AI style" design system identified
@@ -148,4 +148,13 @@ Stats: 4 obs (3,256t read) | 0t work
 ### May 2, 2026
 461 12:01a 🟣 Completed ImageManager main framework Apple-style redesign and started TemplateList business page conversion
 463 " 🟣 Applied Apple-style redesign to AutoUpload, ConfigView, and UserManage components; identified remaining AI-style elements for cleanup
+464 12:03a 🔄 Apple-style design system applied to entire frontend
+465 12:04a 🟣 Completed Apple macOS UI redesign across all frontend components with successful build verification and dev server launch
+466 1:50p ✅ Development branch pull requested
+468 " 🔵 Git pull blocked by untracked AGENTS.md file conflict
+467 " ✅ Development branch pull initiated
+469 1:53p ✅ Development branch synchronized with remote after AGENTS.md conflict resolution
+470 2:05p ✅ Development branch pull initiated
+471 2:06p 🔵 Frontend template system architecture explored before development branch sync
+474 " 🟣 Template list table now displays template ID column
 </claude-mem-context>

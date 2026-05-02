@@ -649,6 +649,8 @@ onMounted(() => {
           </template>
         </el-table-column>
 
+        <el-table-column prop="id" label="ID" width="96" align="center" />
+
         <el-table-column
           prop="name"
           label="模板名称"
