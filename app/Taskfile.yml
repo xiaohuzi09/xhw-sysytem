@@ -1,0 +1,55 @@
+version: '3'
+
+vars:
+  APP_NAME: "app-image-handle"
+  BIN_DIR: "bin"
+  VITE_PORT: '{{.WAILS_VITE_PORT | default 9245}}'
+
+tasks:
+  build:
+    summary: Builds the application for production
+    cmds:
+      - wails build
+
+  dev:
+    summary: Runs the application in development mode
+    cmds:
+      - task: kill-port
+      - wails dev
+
+  # 清理占用的端口
+  kill-port:
+    summary: Kills any process using the Vite port
+    cmds:
+      - task: kill-port:{{OS}}
+    silent: true
+
+  kill-port:darwin:
+    platforms: [darwin]
+    cmds:
+      - |
+        pids="$(lsof -tiTCP:{{.VITE_PORT}} -sTCP:LISTEN 2>/dev/null || true)"
+        if [ -z "$pids" ]; then
+          exit 0
+        fi
+
+        kill $pids 2>/dev/null || true
+        sleep 1
+
+        remaining_pids="$(lsof -tiTCP:{{.VITE_PORT}} -sTCP:LISTEN 2>/dev/null || true)"
+        if [ -n "$remaining_pids" ]; then
+          kill -9 $remaining_pids 2>/dev/null || true
+        fi
+    silent: true
+
+  kill-port:linux:
+    platforms: [linux]
+    cmds:
+      - 'fuser -k {{.VITE_PORT}}/tcp 2>/dev/null || true'
+    silent: true
+
+  kill-port:windows:
+    platforms: [windows]
+    cmds:
+      - powershell -Command "Get-NetTCPConnection -LocalPort {{.VITE_PORT}} -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }"
+    silent: true

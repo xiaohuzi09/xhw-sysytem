@@ -1,0 +1,14 @@
+.task
+bin
+frontend/dist
+frontend/node_modules
+frontend/wailsjs
+frontend/package.json.md5
+build/linux/appimage/build
+build/windows/nsis/MicrosoftEdgeWebview2Setup.exe
+build/config.yml
+合成
+images
+*.DS_Store
+changeme
+app-image-handle
