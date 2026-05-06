@@ -96,6 +96,12 @@ func LoadConfig() *Config {
 
 	AppConfig = &cfg
 	log.Printf("Config loaded from: %s", absPath)
+
+	// 环境变量覆盖端口（Zeabur 等云平台通过 PORT 环境变量指定端口）
+	if port := os.Getenv("PORT"); port != "" {
+		cfg.Server.Port = port
+	}
+
 	return &cfg
 }
 

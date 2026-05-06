@@ -432,7 +432,7 @@ const startCombine = async () => {
       // 从路径中提取文件名作为编号
       const fileName = path.split("/").pop() || "";
       const code = fileName.replace(/\.[^.]+$/, ""); // 去掉扩展名
-      return { url: path, code };
+      return { url: path, code, id: "" };
     });
 
     const resultDir = await CombineImagesWithTemplates(
